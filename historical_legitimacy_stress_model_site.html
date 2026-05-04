@@ -235,6 +235,31 @@
       background: rgba(254, 243, 199, 0.35);
     }
 
+    .baseline-kv .tip-row,
+    .baseline-table thead th,
+    .baseline-table tbody tr,
+    .metric[title],
+    label[title] {
+      cursor: help;
+    }
+
+    .card-title[title],
+    .card-note[title] {
+      cursor: help;
+    }
+
+    .baseline-prose h3[title],
+    .baseline-prose h4[title] {
+      cursor: help;
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    .mini-card[title],
+    .explain li[title] {
+      cursor: help;
+    }
+
     @media (max-width: 1050px) {
       .app {
         grid-template-columns: 1fr;
@@ -777,8 +802,8 @@
 </head>
 <body>
   <header>
-    <h1>Historical Legitimacy Stress Model</h1>
-    <div class="subtitle">
+    <h1 title="Incumbent-party stress index with separate Electoral College and democratic-machinery dimensions. Not a single poll forecast—an analyst rubric.">Historical Legitimacy Stress Model</h1>
+    <div class="subtitle" title="Three outputs: (1) incumbent stress from voter-facing pressures; (2) Electoral College geography stress scored separately; (3) democratic machinery risk so forecasts do not assume clean translation from polls to power. Hover sections below for how each part works.">
       A future-election forecasting tool that combines institutional stability, formal economic data, lived material stress, legitimacy/moral injury, foreign-policy stress, candidate affect, opposition threat, Electoral College conversion, and democratic conversion risk.
     </div>
   </header>
@@ -787,103 +812,103 @@
     <section class="card baseline-banner" id="current-baseline">
       <div class="card-header">
         <div>
-          <div class="card-title">May 3, 2026 — current-condition baseline</div>
-          <div class="card-note">Not a final 2028 forecast. If today’s political and material conditions persisted into a presidential-election environment, what would the model say?</div>
+          <div class="card-title" title="Living snapshot: how the model scores the political environment on a given date. Update the text and preset sliders as facts change. This is not a prediction that 2028 will look identical to today.">May 3, 2026 — current-condition baseline</div>
+          <div class="card-note" title="The model answers: if voter-pressure, economic, and institutional conditions like today’s were the election-year conditions, which side would the stress index favor? It is a stress index, not a win probability.">Not a final 2028 forecast. If today’s political and material conditions persisted into a presidential-election environment, what would the model say?</div>
         </div>
       </div>
       <div class="content baseline-prose">
-        <p class="baseline-lead">
+        <p class="baseline-lead" title="Load the matching preset in Election Setup to sync every slider to this write-up. When news or polls change, adjust sliders and edit this section to keep the public narrative aligned with the model.">
           Below is the model applied to <strong>conditions as they exist on May 3, 2026</strong>.
           Use preset <strong>“Current 2026 baseline”</strong> in Election Setup to load these sliders. Revise after midterms, inflation/oil news, Iran developments, and once Democrats have a nominee.
         </p>
 
-        <div class="baseline-callout">
+        <div class="baseline-callout" title="The model always scores stress against the White House party. Here the WH party is Republican and the sitting president is Trump, so high stress means danger to Republicans (and relative opportunity for the out-party) under the rubric—not a personal preference score.">
           <strong>Baseline assumption.</strong> White House party: Republican Party. Incumbent president: Donald Trump.
           Next presidential-cycle risk being modeled: <strong>Republican incumbent-party vulnerability</strong>.
         </div>
 
-        <h4>Model read (summary)</h4>
+        <h4 title="Quick read of outputs implied by the baseline preset. Hover each row below for how that line is constructed.">Model read (summary)</h4>
         <div class="baseline-kv">
-          <div><span>As-of date</span><span>2026-05-03</span></div>
-          <div><span>Incumbent stress (this site, capped sliders)</span><span><strong>53</strong> / 100 → Challenger favored band</span></div>
-          <div><span>Narrative “paper” stress (uncapped reads)</span><span>~56–58 (see layer notes)</span></div>
-          <div><span>Confidence</span><span>Medium-low — election far away; 2026 midterms not yet held</span></div>
+          <div class="tip-row" title="Snapshot date for sources and narrative in this baseline box. Change the date when you refresh the analysis."><span>As-of date</span><span>2026-05-03</span></div>
+          <div class="tip-row" title="Incumbent stress = sum of model layers A–F minus opposition offset G, clamped 0–100. This site uses capped sliders from the embedded rubric, so totals can differ slightly from a free-form spreadsheet. ~53 here maps to the Challenger favored band (50–64)."><span>Incumbent stress (this site, capped sliders)</span><span><strong>53</strong> / 100 → Challenger favored band</span></div>
+          <div class="tip-row" title="If you hypothetically scored factors above slider caps in a spreadsheet (e.g. elite panic), raw totals can sit a few points higher. The site enforces caps so every analyst uses the same discrete rubric."><span>Narrative “paper” stress (uncapped reads)</span><span>~56–58 (see layer notes)</span></div>
+          <div class="tip-row" title="Heuristic confidence from distance to stress thresholds and from democratic-conversion risk (machinery uncertainty). Far from cut points and high machinery risk both reduce stated confidence. Early in the cycle, time-to-election also lowers confidence."><span>Confidence</span><span>Medium-low — election far away; 2026 midterms not yet held</span></div>
         </div>
-        <p class="layer-detail">
+        <p class="layer-detail" title="Drivers are additive in logic: formal GDP can look okay while lived-material and legitimacy layers still push incumbent-party vulnerability—this model separates those channels on purpose.">
           Main driver: formal economy is not collapsing, but lived material stress, inflation memory, housing stress, Iran-war cost concerns, weak approval, youth disillusionment, and legitimacy / democratic-risk layers are already accumulating.
         </p>
 
-        <h3>Scorecard (site sliders)</h3>
-        <p class="layer-detail">Totals match the <strong>Current 2026 baseline</strong> preset. Some narrative rows above used analytic scores before slider caps (e.g. elite panic max 1).</p>
+        <h3 title="Each row is the sum of sliders in that section of Model Inputs. Hover a row for how it feeds (or does not feed) the headline stress number.">Scorecard (site sliders)</h3>
+        <p class="layer-detail" title="The Current 2026 baseline preset sets every factor to these totals. Institutional narrative sometimes shows a higher analytic read before caps (e.g. elite panic slider maxes at 1).">Totals match the <strong>Current 2026 baseline</strong> preset. Some narrative rows above used analytic scores before slider caps (e.g. elite panic max 1).</p>
         <div class="table-wrap">
           <table class="baseline-table">
             <thead>
               <tr>
-                <th>Layer</th>
-                <th>Score</th>
-                <th>Max</th>
-                <th>Read</th>
+                <th title="Model section (A–I). Each sums its factor sliders; stress layers add to incumbent vulnerability. Offset and the two conversion blocks work differently—hover each row.">Layer</th>
+                <th title="Points assigned from sliders for this section, using the embedded rubric in Model Inputs.">Score</th>
+                <th title="Maximum points possible for this section when every factor in the section is at its slider max.">Max</th>
+                <th title="One-line analyst judgment for this baseline snapshot—not generated by the app.">Read</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td>Institutional stress</td><td>5</td><td>20</td><td>Early weakness; scandal/elite anxiety</td></tr>
-              <tr><td>Formal economic stress</td><td>9</td><td>20</td><td>Mixed; inflation re-acceleration</td></tr>
-              <tr><td>Lived material stress</td><td>17</td><td>20</td><td>Very high</td></tr>
-              <tr><td>Legitimacy / moral injury</td><td>13</td><td>20</td><td>High</td></tr>
-              <tr><td>Foreign / military stress</td><td>7</td><td>10</td><td>Iran war / oil-cost drag</td></tr>
-              <tr><td>Candidate affect / coalition fit</td><td>7</td><td>10</td><td>Weak outside GOP base</td></tr>
-              <tr><td>Opposition threat offset</td><td>5</td><td>25</td><td>Low — no Democratic nominee yet</td></tr>
-              <tr class="sum-row"><td>Incumbent stress total</td><td>53</td><td>100</td><td>Challenger favored if persisted</td></tr>
-              <tr><td>Electoral College conversion</td><td>8</td><td>30</td><td>GOP some structural map advantage</td></tr>
-              <tr><td>Democratic conversion risk</td><td>16</td><td>30</td><td>High — polarization &amp; precedent</td></tr>
+              <tr title="Section A: midterms, open seat, nomination rupture, third party, scandal, elite panic. Each factor scores stress to the White House party. Sum here is 5 with capped sliders (elite panic max 1). Adds toward raw incumbent stress before offset."><td>Institutional stress</td><td>5</td><td>20</td><td>Early weakness; scandal/elite anxiety</td></tr>
+              <tr title="Section B: recession, misery index, weak GDP, unemployment, inflation shock—official and macro indicators. Sum adds to incumbent stress. Here mixed growth with sharp inflation pressure keeps this layer elevated."><td>Formal economic stress</td><td>9</td><td>20</td><td>Mixed; inflation re-acceleration</td></tr>
+              <tr title="Section C: how voters experience the economy—worse-off sentiment, housing, food, debt, blocked milestones, gaslighting. Often diverges from formal economy; high lived stress is especially dangerous for incumbents."><td>Lived material stress</td><td>17</td><td>20</td><td>Very high</td></tr>
+              <tr title="Section D: moral rupture, foreign-policy coalition splits, repression, base betrayal, donor capture, narrative break. Scores legitimacy and coalition trust damage to the WH party."><td>Legitimacy / moral injury</td><td>13</td><td>20</td><td>High</td></tr>
+              <tr title="Section E: major foreign/military failure, war fatigue, hypocrisy damage. Separate from D so you do not double-count the same headline twice without splitting mechanisms."><td>Foreign / military stress</td><td>7</td><td>10</td><td>Iran war / oil-cost drag</td></tr>
+              <tr title="Section F: nominee weakness, speaking to material pain, coalition alienation. Scores fit between candidate and the moment."><td>Candidate affect / coalition fit</td><td>7</td><td>10</td><td>Weak outside GOP base</td></tr>
+              <tr title="Section G is subtracted from raw stress (A–F). Higher offset = challenger seen as scarier or more unacceptable, pulling voters back toward the WH party. Low here because no Democratic nominee exists yet to anchor fear or unpopularity."><td>Opposition threat offset</td><td>5</td><td>25</td><td>Low — no Democratic nominee yet</td></tr>
+              <tr class="sum-row" title="Formula on this site: clamp( A+B+C+D+E+F − G , 0, 100 ). Bands: 0–34 WH party favored; 35–49 competitive/unstable; 50–64 challenger favored; 65+ collapse risk for WH party."><td>Incumbent stress total</td><td>53</td><td>100</td><td>Challenger favored if persisted</td></tr>
+              <tr title="Section H only: geography and efficiency of votes—overconcentration, challenger swing efficiency, third-party map, realignment, PV–EC split risk. Shown separately from the headline stress number; it mainly informs converted-outcome logic (national vote vs Electoral College), not the raw stress band by itself."><td>Electoral College conversion</td><td>8</td><td>30</td><td>GOP some structural map advantage</td></tr>
+              <tr title="Section I only: machinery risk—close margins, ballot disputes, partisan administration, courts, certification pathways, violence, structural mismatch. Does not add into the headline incumbent stress total; it flags scenarios where voter intent and certified outcome could diverge, and it lowers model confidence when high."><td>Democratic conversion risk</td><td>16</td><td>30</td><td>High — polarization &amp; precedent</td></tr>
             </tbody>
           </table>
         </div>
 
-        <blockquote class="baseline-pull">
+        <blockquote class="baseline-pull" title="Translation: high stress does not equal automatic defeat—it means the WH party is in the model’s danger zone on voter-pressure logic; geography, opposition threat, and machinery risk still matter separately.">
           As of May 2026, the model does not say Democrats are guaranteed to win. It says the Republican White House party is already in the danger zone: formal economy only okay while lived economy, cost-of-living politics, foreign-policy stress, and legitimacy conditions are bad.
         </blockquote>
 
-        <h3>Layer notes (revise as news changes)</h3>
+        <h3 title="Expand each layer for dated notes. Replace text when new polls or events change your scoring story.">Layer notes (revise as news changes)</h3>
 
         <details open>
-          <summary>A. Institutional — 5 / 20 on site</summary>
+          <summary title="Institutional layer factors and why they sum to 5 on capped sliders for this baseline.">A. Institutional — 5 / 20 on site</summary>
           <p class="layer-detail">Midterms not scored; open seat 0; nomination tension 1; third party 0; scandal 3 (governance/Iran/Epstein/norms cluster); elite panic <strong>capped at 1</strong> (analytic read higher). WaPo–ABC–Ipsos: ~37% approve / 62% disapprove; generic ballot favors Democrats.</p>
         </details>
         <details>
-          <summary>B. Formal economy — 9 / 20</summary>
+          <summary title="Macro indicators vs voter experience—formal economy can be middling while politics stays toxic if inflation jumps.">B. Formal economy — 9 / 20</summary>
           <p class="layer-detail">BEA: real GDP +2.0% annualized Q1 2026. BLS: CPI +3.3% YoY March 2026; unemployment ~4.3–4.4%. Recession 1, misery 3, GDP weak 1, unemployment 1, inflation shock <strong>3</strong> (max on slider).</p>
         </details>
         <details>
-          <summary>C. Lived material — 17 / 20</summary>
+          <summary title="Lived material stress captures household reality even when headline GDP looks acceptable—often the decisive wedge for incumbents.">C. Lived material — 17 / 20</summary>
           <p class="layer-detail">Michigan sentiment weak; mortgage ~6.3%, sales sluggish; rent burden; household debt ~$18.8T (NY Fed). worseOff 4, housing 4, food 2, debt 3, blockedLife 3, gaslighting 1.</p>
         </details>
         <details>
-          <summary>D. Legitimacy / moral injury — 13 / 20</summary>
+          <summary title="Legitimacy layer scores coalition trust and moral injury to the WH party—war, protest, detention narratives, donor cynicism, narrative break.">D. Legitimacy / moral injury — 13 / 20</summary>
           <p class="layer-detail">Iran war, detention/protest/campus controversies, donor/elite narratives. moralRupture 3, warSplit 3, repression 3, baseDemobilization 1, donorCapture 2, narrativeBreak <strong>1</strong> (max).</p>
         </details>
         <details>
-          <summary>E. Foreign / military — 7 / 10</summary>
+          <summary title="Separate from legitimacy so you allocate foreign-policy failure/hypocrisy distinctly from domestic coalition rupture when possible.">E. Foreign / military — 7 / 10</summary>
           <p class="layer-detail">majorFailure 3, warFatigue 2, foreignHypocrisy <strong>2</strong> (max). Iran conflict clouds growth and inflation outlook.</p>
         </details>
         <details>
-          <summary>F. Candidate affect — 7 / 10</summary>
+          <summary title="Whether the WH-party nominee fits the crisis emotionally—credibility on pain, coalition alienation, perceived weakness.">F. Candidate affect — 7 / 10</summary>
           <p class="layer-detail">weakCandidate 2, cantSpeakPain 3, coalitionAlienation 2. Cost-of-living approval extremely weak in polls; youth souring in reporting.</p>
         </details>
         <details>
-          <summary>G. Opposition offset — 5 / 25</summary>
+          <summary title="Subtracts from headline stress: fear of the challenger pulls voters toward the WH party. Usually rises once Democrats pick a known nominee.">G. Opposition offset — 5 / 25</summary>
           <p class="layer-detail">All offset factors at 1 — no nominee to anchor fear/unpopularity yet. Could swing sharply after nomination.</p>
         </details>
         <details>
-          <summary>H. Electoral conversion — 8 / 30</summary>
+          <summary title="Geographic distortion risk—helps interpret converted outcome vs raw mandate; does not replace incumbent stress.">H. Electoral conversion — 8 / 30</summary>
           <p class="layer-detail">Map still favors GOP in places; regional realignment 3; PV–EC split risk 2. Does not by itself save either party.</p>
         </details>
         <details>
-          <summary>I. Democratic conversion risk — 16 / 30</summary>
+          <summary title="Institutional risk layer—counts, courts, certification, intimidation—not the same as who leads polls; warns when machinery could dominate the endgame.">I. Democratic conversion risk — 16 / 30</summary>
           <p class="layer-detail">Close margins, ballot fights, partisan admin, courts, certification precedent, violence risk, structural mismatch — institutional-risk layer, not a prediction of fraud.</p>
         </details>
 
-        <h3>Sources (verify links periodically)</h3>
+        <h3 title="External evidence for the narrative and for spot-checking data points. Replace or add links as you refresh the baseline.">Sources (verify links periodically)</h3>
         <ul class="sources">
           <li><a href="https://www.washingtonpost.com/politics/2026/05/03/trump-approval-ratings-poll/" rel="noopener noreferrer" target="_blank">Washington Post — Trump approval / generic ballot (May 2026)</a></li>
           <li><a href="https://www.bea.gov/news/2026/gdp-advance-estimate-1st-quarter-2026" rel="noopener noreferrer" target="_blank">BEA — GDP advance Q1 2026</a></li>
@@ -905,41 +930,41 @@
     <section class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">Election Setup</div>
-          <div class="card-note">Load a historical preset or create a future race from scratch.</div>
+          <div class="card-title" title="Pick who holds the White House and load a preset so sliders match a scenario. Names are for readable outputs; all scoring is against the WH party.">Election Setup</div>
+          <div class="card-note" title="Presets bundle every factor at once. Reset neutral clears saved browser session and loads the blank scenario.">Load a historical preset or create a future race from scratch.</div>
         </div>
-        <button class="secondary" id="themeToggle" type="button">Light</button>
+        <button class="secondary" id="themeToggle" type="button" title="Toggle light/dark theme for readability.">Light</button>
       </div>
       <div class="content">
         <div class="controls-top">
           <div>
-            <label for="raceName">Race name</label>
+            <label for="raceName" title="Label only—does not change scores. Used in exported summary text.">Race name</label>
             <input type="text" id="raceName" value="2028 Presidential Election" />
           </div>
           <div>
-            <label for="incumbentParty">White House party</label>
+            <label for="incumbentParty" title="The party that holds the White House. All stress sliders score danger TO this party unless you are in Opposition Threat Offset (which subtracts stress).">White House party</label>
             <input type="text" id="incumbentParty" value="Incumbent Party" />
           </div>
           <div>
-            <label for="incumbentCandidate">Incumbent-party candidate</label>
+            <label for="incumbentCandidate" title="Nominee or acting leader of the White House party—used in narrative sentences for Popular Mandate and Converted Outcome.">Incumbent-party candidate</label>
             <input type="text" id="incumbentCandidate" value="Incumbent Nominee" />
           </div>
           <div>
-            <label for="challengerCandidate">Challenger</label>
+            <label for="challengerCandidate" title="Major opposing-party candidate—used in narrative outputs. Does not change numeric scores.">Challenger</label>
             <input type="text" id="challengerCandidate" value="Challenger Nominee" />
           </div>
         </div>
 
-        <label for="presetSelect">Historical / scenario preset</label>
+        <label for="presetSelect" title="Loads a full vector of slider values plus optional notes. Switch scenarios to compare eras or the current baseline.">Historical / scenario preset</label>
         <select id="presetSelect"></select>
         <div class="button-row">
-          <button type="button" id="loadPreset">Load preset</button>
-          <button type="button" class="secondary" id="resetNeutral">Reset neutral</button>
-          <button type="button" class="secondary" id="copySummary">Copy summary</button>
-          <button type="button" class="danger" id="clearNotes">Clear notes</button>
+          <button type="button" id="loadPreset" title="Apply the scenario selected in the dropdown: fills every slider and notes field from that preset.">Load preset</button>
+          <button type="button" class="secondary" id="resetNeutral" title="Load blank neutral scenario and clear locally saved session data for this browser.">Reset neutral</button>
+          <button type="button" class="secondary" id="copySummary" title="Copy a text summary of scores and narratives to the clipboard for reporting.">Copy summary</button>
+          <button type="button" class="danger" id="clearNotes" title="Clear analyst notes only; does not reset sliders.">Clear notes</button>
         </div>
 
-        <div class="footer-note">
+        <div class="footer-note" title="Core arithmetic: sum layers A–F, subtract layer G (offset), clamp 0–100 for headline incumbent stress. Layers H and I are separate outputs—geography and machinery risk—not added into that headline total.">
           Scoring rule: each stress factor adds danger to the White House party. Opposition threat subtracts stress because a scary or unacceptable challenger can force voters back to the incumbent party.
         </div>
       </div>
@@ -948,12 +973,12 @@
     <section class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">Prediction Output</div>
-          <div class="card-note">The model separates voter preference, Electoral College conversion, and democratic conversion risk.</div>
+          <div class="card-title" title="Headline band uses incumbent stress only. Electoral and democratic scores below are parallel dimensions—do not merge them into one winner prediction without reading both text boxes.">Prediction Output</div>
+          <div class="card-note" title="Popular mandate ≈ voter-pressure logic from stress. Converted outcome blends stress with Electoral College geography. Democratic risk flags machinery scenarios separate from who is ahead in polls.">The model separates voter preference, Electoral College conversion, and democratic conversion risk.</div>
         </div>
       </div>
       <div class="content">
-        <div id="resultBanner" class="result-banner">
+        <div id="resultBanner" class="result-banner" title="The banner classification follows incumbent stress bands. Fine print in Popular Mandate vs Converted Outcome accounts for geography and democratic risk.">
           <div id="resultPill" class="pill warn">Calculating</div>
           <h2 id="mainPrediction">Competitive / unstable</h2>
           <p id="predictionExplanation">Adjust the model inputs to generate a prediction.</p>
@@ -961,22 +986,22 @@
         </div>
 
         <div class="score-grid">
-          <div class="metric">
+          <div class="metric" title="Sum of sections A–F minus G, capped 0–100. Measures accumulated danger to the White House party from institutional, economic, lived, legitimacy, foreign, and candidate-affect factors, net of opposition-threat relief.">
             <div class="metric-label">Incumbent Stress</div>
             <div class="metric-value" id="stressScore">0</div>
             <div class="metric-small">0–34 safe, 35–49 unstable, 50–64 challenger favored, 65+ collapse.</div>
           </div>
-          <div class="metric">
+          <div class="metric" title="Section H total only: wasted votes, swing-state efficiency, third-party geography, realignment, PV–EC split risk. Higher scores mean geography could bend the outcome away from a simple national poll lead. Not added into the headline stress number.">
             <div class="metric-label">Electoral Conversion</div>
             <div class="metric-value" id="electoralScore">0</div>
             <div class="metric-small">Positive favors challenger conversion; negative favors incumbent conversion.</div>
           </div>
-          <div class="metric">
+          <div class="metric" title="Section I total: litigation, margins, ballot access, partisan administration, courts, certification pathways, violence, structural mismatch. Flags scenarios where certified power might diverge from voter intent; also pulls down confidence when elevated.">
             <div class="metric-label">Democratic Risk</div>
             <div class="metric-value" id="conversionRiskScore">0</div>
             <div class="metric-small">Risk that courts, suppression, count fights, certification sabotage, or violence distort voter intent.</div>
           </div>
-          <div class="metric">
+          <div class="metric" title="Heuristic: how decisive the stress score is versus 35/50/65 cut points, penalized when democratic conversion risk is high (harder to know final outcome). Not statistical confidence intervals.">
             <div class="metric-label">Confidence</div>
             <div class="metric-value" id="confidenceScore">0%</div>
             <div class="metric-small">Based on distance from thresholds and conversion-risk instability.</div>
@@ -984,11 +1009,11 @@
         </div>
 
         <div class="conversion-grid">
-          <div class="mini-card">
+          <div class="mini-card" title="Plain-language read of who is favored if national voter-pressure conditions matched the stress score—before geography and machinery complications.">
             <h3>Popular Mandate</h3>
             <p id="popularMandateText">Not calculated yet.</p>
           </div>
-          <div class="mini-card">
+          <div class="mini-card" title="Blends stress with Electoral College conversion to describe likely mapped outcome; then appends democratic-risk caveats when Section I is elevated.">
             <h3>Converted Outcome</h3>
             <p id="convertedOutcomeText">Not calculated yet.</p>
           </div>
@@ -999,8 +1024,8 @@
     <section class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">Model Inputs</div>
-          <div class="card-note">Hover factor names (dotted underline) or sliders for full rubric tooltips; details update as you drag.</div>
+          <div class="card-title" title="Every slider pulls guidance text from the embedded model JSON. Score each factor against the White House party unless you are in Opposition Threat Offset (G), which subtracts stress.">Model Inputs</div>
+          <div class="card-note" title="Factor names show the full rubric on hover; sliders show the rubric line for the current value. Expand sections to reduce scrolling.">Hover factor names (dotted underline) or sliders for full rubric tooltips; details update as you drag.</div>
         </div>
       </div>
       <div class="content" id="factorContainer"></div>
@@ -1009,30 +1034,30 @@
     <section class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">Presets, Notes & Explanation</div>
-          <div class="card-note">Use historical presets to sanity-check future scoring.</div>
+          <div class="card-title" title="Quick-load scenarios and analyst notes. The May 2026 baseline lives here as a preset and in the top banner.">Presets, Notes & Explanation</div>
+          <div class="card-note" title="Historical elections let you verify slider magnitudes; compare to Current 2026 baseline when judging future races.">Use historical presets to sanity-check future scoring.</div>
         </div>
       </div>
       <div class="content">
         <div class="scenario-list" id="scenarioList"></div>
 
         <div class="explain">
-          <div class="mini-card">
+          <div class="mini-card" title="Stress bands describe incumbent-party danger. Electoral and democratic scores explain why national-leader logic might not equal final certified power.">
             <h3>How to read the result</h3>
             <ul>
-              <li><strong>Incumbent stress</strong> predicts whether the White House party is politically vulnerable.</li>
-              <li><strong>Electoral conversion</strong> models geography: popular support can be inefficiently distributed.</li>
-              <li><strong>Democratic conversion risk</strong> models breakdowns: recount fights, ballot rejection, court intervention, suppression, fake electors, certification sabotage, or violence.</li>
+              <li title="Uses headline incumbent stress (sections A–F minus G). High = WH party under voter-pressure strain."><strong>Incumbent stress</strong> predicts whether the White House party is politically vulnerable.</li>
+              <li title="Section H total—mapping national preference to EV outcomes; inefficiency can flip outcomes without changing mandate prose much."><strong>Electoral conversion</strong> models geography: popular support can be inefficiently distributed.</li>
+              <li title="Section I total—when litigation, margins, or certification dominate endgames regardless of poll leader."><strong>Democratic conversion risk</strong> models breakdowns: recount fights, ballot rejection, court intervention, suppression, fake electors, certification sabotage, or violence.</li>
             </ul>
           </div>
-          <div class="mini-card">
+          <div class="mini-card" title="Lichtman-style keys are binary; this model uses graded sliders and splits lived economy, legitimacy, geography, and machinery explicitly.">
             <h3>Why this differs from 13 Keys</h3>
             <p>Lichtman gives one point per key that turns against the incumbent party. This model keeps that incumbent-party logic but adds lived material stress, legitimacy/moral injury, conversion geography, and democratic machinery risk.</p>
           </div>
         </div>
 
         <div style="margin-top: 14px;">
-          <label for="analystNotes">Analyst notes</label>
+          <label for="analystNotes" title="Free-text reasoning for your team; included when you copy summary to clipboard. Does not affect numeric scores.">Analyst notes</label>
           <textarea id="analystNotes" placeholder="Example: formal economy is good, but lived housing/grocery stress is severe; Gaza/protest repression creates coalition moral injury; challenger risk offsets some but not all stress."></textarea>
         </div>
       </div>
