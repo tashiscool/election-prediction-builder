@@ -901,6 +901,73 @@
       margin-bottom: 0;
     }
 
+    .warning-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .warning-badge {
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(51, 65, 85, 0.45);
+      color: var(--text);
+    }
+
+    .warning-badge.warn {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: rgba(245, 158, 11, 0.5);
+      color: #fcd34d;
+    }
+
+    .warning-badge.bad {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.55);
+      color: #fca5a5;
+    }
+
+    .warning-badge.purple {
+      background: rgba(167, 139, 250, 0.2);
+      border-color: rgba(167, 139, 250, 0.55);
+      color: #ddd6fe;
+    }
+
+    details.section-howto {
+      margin: 10px 14px 2px;
+      border: 1px dashed rgba(148, 163, 184, 0.28);
+      border-radius: 12px;
+      padding: 0 10px 8px;
+      background: rgba(2, 6, 23, 0.2);
+    }
+
+    details.section-howto > summary {
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--muted);
+      padding: 8px 0 5px;
+      list-style: none;
+    }
+
+    details.section-howto > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .howto-grid {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .howto-grid p {
+      margin: 0 0 6px;
+    }
+
     #resultBanner[aria-busy="true"] {
       opacity: 0.85;
     }
@@ -1072,13 +1139,24 @@
         <select id="presetSelect"></select>
         <div class="button-row">
           <button type="button" id="loadPreset" title="Apply the scenario selected in the dropdown: fills every slider and notes field from that preset.">Load preset</button>
-          <button type="button" class="secondary" id="resetNeutral" title="Load blank neutral scenario and clear locally saved session data for this browser.">Reset neutral</button>
-          <button type="button" class="secondary" id="copySummary" title="Copy a text summary of scores and narratives to the clipboard for reporting.">Copy summary</button>
+          <button type="button" class="secondary" id="resetNeutral" title="Load blank neutral scenario and clear locally saved session data for this browser.">Reset blank</button>
+          <button type="button" class="secondary" id="copySummary" title="Copy a standardized testable prediction output to the clipboard.">Copy Testable Prediction</button>
           <button type="button" class="danger" id="clearNotes" title="Clear analyst notes only; does not reset sliders.">Clear notes</button>
         </div>
 
-        <div class="footer-note" title="Core arithmetic: sum layers A–F, subtract layer G (offset), clamp 0–100 for headline incumbent stress. Layers H and I are separate outputs—geography and machinery risk—not added into that headline total.">
-          Scoring rule: each stress factor adds danger to the White House party. Opposition threat subtracts stress because a scary or unacceptable challenger can force voters back to the incumbent party.
+        <div class="controls-top" style="margin-top: 12px;">
+          <div>
+            <label for="modelVersion" title="Version label for copied standardized prediction output.">Model Version</label>
+            <input type="text" id="modelVersion" value="v2.0-testable" />
+          </div>
+          <div>
+            <label for="predictionTimestamp" title="Date this forecast snapshot is issued.">Prediction Timestamp</label>
+            <input type="date" id="predictionTimestamp" />
+          </div>
+        </div>
+
+        <div class="footer-note" title="All sliders are 0–5, then section weights are applied: A/B/C/D=20, E/F=10, G=25 subtractive, H/I=30 separate.">
+          Normalized scoring: every subfactor is 0–5, then section weighting preserves model totals and keeps H/I parallel (not merged into headline stress).
         </div>
       </div>
     </section>
@@ -1096,17 +1174,19 @@
           <p id="resultBannerMatchup" class="result-matchup" aria-live="polite"></p>
           <h2 id="mainPrediction">Competitive / unstable</h2>
           <p id="predictionExplanation">Adjust the model inputs to generate a prediction.</p>
-          <div class="stress-bar-shell" title="Filled width is incumbent stress 0–100. Tick marks: 35 unstable threshold, 50 challenger-favored threshold, 65 collapse-risk threshold.">
+          <div class="stress-bar-shell" title="Filled width is incumbent stress 0–100. Tick marks: 25 incumbent-favored threshold, 35 competitive threshold, 50 challenger threshold, 65 collapse threshold.">
             <div class="stress-bar-inner">
               <div id="stressBar"></div>
               <div class="stress-bar-ticks" aria-hidden="true">
+                <span style="left: 25%;" title="25 — incumbent favored band begins"></span>
                 <span style="left: 35%;" title="35 — competitive / unstable"></span>
                 <span style="left: 50%;" title="50 — challenger favored band begins"></span>
                 <span style="left: 65%;" title="65 — White House party collapse risk"></span>
               </div>
             </div>
             <div class="stress-bar-legend">
-              <span>0 WH favored</span>
+              <span>0 strong incumbent</span>
+              <span>25 incumbent</span>
               <span>35 unstable</span>
               <span>50 challenger</span>
               <span>65 collapse</span>
@@ -1118,12 +1198,12 @@
           <div class="metric" title="Sum of sections A–F minus G, capped 0–100. Measures accumulated danger to the White House party from institutional, economic, lived, legitimacy, foreign, and candidate-affect factors, net of opposition-threat relief.">
             <div class="metric-label">Incumbent Stress</div>
             <div class="metric-value" id="stressScore">0</div>
-            <div class="metric-small">0–34 safe, 35–49 unstable, 50–64 challenger favored, 65+ collapse.</div>
+            <div class="metric-small">0–24 strong incumbent, 25–34 incumbent, 35–49 competitive, 50–64 challenger, 65+ collapse.</div>
           </div>
           <div class="metric" title="Section H total only: wasted votes, swing-state efficiency, third-party geography, realignment, PV–EC split risk. Higher scores mean geography could bend the outcome away from a simple national poll lead. Not added into the headline stress number.">
             <div class="metric-label">Electoral Conversion</div>
             <div class="metric-value" id="electoralScore">0</div>
-            <div class="metric-small">Positive favors challenger conversion; negative favors incumbent conversion.</div>
+            <div class="metric-small">Weighted 0–30 conversion pressure (used as +0.35 multiplier in converted outcome).</div>
           </div>
           <div class="metric" title="Section I total: litigation, margins, ballot access, partisan administration, courts, certification pathways, violence, structural mismatch. Flags scenarios where certified power might diverge from voter intent; also pulls down confidence when elevated.">
             <div class="metric-label">Democratic Risk</div>
@@ -1136,6 +1216,7 @@
             <div class="metric-small">Based on distance from thresholds and conversion-risk instability.</div>
           </div>
         </div>
+        <div id="warningBadges" class="warning-badges" aria-live="polite"></div>
 
         <div class="conversion-grid">
           <div class="mini-card" title="Plain-language read of who is favored if national voter-pressure conditions matched the stress score—before geography and machinery complications.">
@@ -1157,7 +1238,12 @@
           <div class="card-note" title="Factor names show the full rubric on hover; sliders show the rubric line for the current value. Expand sections to reduce scrolling.">Sections A–F add stress to the White House party; G subtracts (opposition threat). H and I are reported separately for geography and machinery risk—same logic as the Election Compass / Lovable build.</div>
         </div>
       </div>
-      <div class="content" id="factorContainer"></div>
+      <div class="content">
+        <div class="footer-note" style="margin-bottom:12px;">
+          <strong>General 0–5 meaning:</strong> 0 absent/irrelevant, 1 weak, 2 noticeable secondary, 3 clearly meaningful, 4 dominant/severe, 5 historically defining.
+        </div>
+        <div id="factorContainer"></div>
+      </div>
     </section>
 
     <section class="card">
@@ -1186,6 +1272,11 @@
         </div>
 
         <div style="margin-top: 14px;">
+          <label for="falsifiabilityConditions" title="Auto-generated disconfirming conditions. Editable by analyst.">Falsifiability Conditions</label>
+          <textarea id="falsifiabilityConditions" placeholder="Auto-populated from current scenario; edit this list to define what would falsify this forecast."></textarea>
+        </div>
+
+        <div style="margin-top: 14px;">
           <label for="analystNotes" title="Free-text reasoning for your team; included when you copy summary to clipboard. Does not affect numeric scores.">Analyst notes</label>
           <textarea id="analystNotes" placeholder="Example: formal economy is good, but lived housing/grocery stress is severe; Gaza/protest repression creates coalition moral injury; challenger risk offsets some but not all stress."></textarea>
         </div>
@@ -1199,7 +1290,7 @@
   </script>
 
   <script>
-    const STORAGE_KEY = "hlsm-session-v2";
+    const STORAGE_KEY = "hlsm-session-v3";
     const EMBEDDED_CTX_ID = "embedded-model-context";
     const BASELINE_PRESET_ID = "current-2026-baseline";
 
@@ -1222,30 +1313,55 @@
       { jsonKey: "democraticConversionRisk", id: "democraticRisk", title: "I. Democratic Conversion Risk", isOffset: false }
     ];
 
+    const SECTION_WEIGHTS = {
+      institutional: 20,
+      formalEconomy: 20,
+      livedMaterial: 20,
+      legitimacy: 20,
+      foreignMilitary: 10,
+      candidateAffect: 10,
+      oppositionOffset: 25,
+      electoralConversion: 30,
+      democraticRisk: 30
+    };
+
+    const SECTION_EXAMPLES = {
+      institutional: "0–1: 1984 Reagan, 1996 Clinton • 2–3: 1988 Bush succession, 2012 Obama after midterm damage • 4–5: 1968 Democrats, 1980 Carter/Kennedy, 1912 GOP split",
+      formalEconomy: "0–1: 1984, 1996, 2024 formal layer • 2–3: 2012 slow recovery, 1992 recession memory • 4–5: 1980 stagflation, 2008 crisis, 2020 COVID recession",
+      livedMaterial: "0–1: 1984, 1996, 1956 • 2–3: 2012, 2016 • 4–5: 1980, 2008, 2020, 2024",
+      legitimacy: "0–1: 1956, 1984, 1996 • 2–3: 2004 Iraq drag, 2016 elite/donor issue • 4–5: 1968, 1976, 2020, 2024",
+      foreignMilitary: "0–1: 1996, 1984 • 2–3: 2004 Iraq drag, 2024 Gaza/Iran stress • 4–5: 1952 Korea, 1968 Vietnam, 1980 Iran hostage",
+      candidateAffect: "0–1: Eisenhower 1956, Reagan 1984, Obama 2008 • 2–3: Obama 2012, Bush 1988 • 4–5: Carter 1980, Clinton 2016, Harris 2024 critique",
+      oppositionOffset: "0–1: Obama 2008, Clinton 1992 as acceptable challengers • 2–3: Romney 2012, Kerry 2004 • 4–5: Goldwater 1964, Trump 2020/2024, McGovern 1972",
+      electoralConversion: "0–1: 1984, 1996, 2008 clean conversions • 2–3: 2004, 2012 • 4–5: 1888, 2000, 2016 split-risk elections",
+      democraticRisk: "0–1: 1984, 1996, 2008 • 2–3: normal close modern elections • 4–5: 2000 Florida, 2020 fake elector/J6 risk, 1876 dispute"
+    };
+
     let sections = [];
+    let modelContext = null;
     const factorValues = {};
     let saveTimer = null;
 
     const presets = [
       {
         id: "neutral",
-        title: "Neutral future race",
-        meta: "Blank baseline for a future election.",
+        title: "Future Election Blank",
+        meta: "Prospective forecast blank template.",
         raceName: "Future Presidential Election",
         incumbentParty: "Incumbent Party",
         incumbentCandidate: "Incumbent Nominee",
         challengerCandidate: "Challenger Nominee",
         values: {},
-        notes: "Use this blank scenario for a future race. Score the White House party's stress, then separately score Electoral College conversion and democratic conversion risk."
+        notes: "Prospective forecast template. Use normalized 0–5 sliders, then verify weighted scores and explicit falsifiability conditions."
       },
       {
         id: "current-2026-baseline",
-        title: "Current 2026 baseline: Republican incumbent stress",
-        meta: "May 3, 2026 — formal economy mixed; lived material stress high; Iran-war / inflation legitimacy stress rising.",
-        raceName: "Current 2026 Baseline for Next Presidential Cycle",
+        title: "Current 2026 Baseline",
+        meta: "Early-cycle provisional baseline, not a final 2028 prediction (prospective forecast).",
+        raceName: "2028 Cycle (Current 2026 Baseline)",
         incumbentParty: "Republican Party",
-        incumbentCandidate: "Donald Trump",
-        challengerCandidate: "Democratic challenger (TBD)",
+        incumbentCandidate: "Republican incumbent/successor",
+        challengerCandidate: "Democratic challenger",
         values: {
           midtermLoss: 0,
           openSeat: 0,
@@ -1294,7 +1410,7 @@
           violence: 3,
           conversionMismatch: 2
         },
-        notes: "Current-condition baseline only (May 3, 2026). Revise after 2026 midterms, inflation/oil path, Iran trajectory, Democratic nominee, and any open-seat succession question. Republicans vulnerable if these conditions persist: weak approval, poor cost-of-living approval, inflation re-acceleration, weak sentiment, housing/rent stress, household debt, youth disillusionment, Iran-war costs, civil-liberties / protest legitimacy stress."
+        notes: "Early-cycle provisional baseline only (prospective forecast). Formal economy is medium, lived/legitimacy are high, opposition offset remains low while nominee definition is incomplete."
       },
       {
         id: "2024",
@@ -1505,61 +1621,173 @@
           tinyMargins: 1, ballotDisputes: 0, partisanAdmin: 0, courtRisk: 0, certSabotage: 0, violence: 2, conversionMismatch: 1
         },
         notes: "Model logic: legitimacy stress became visible institutional rupture, unlike 2024's more contained coalition-specific legitimacy rupture."
+      },
+      {
+        id: "1996",
+        title: "1996: Democrats hold",
+        meta: "Low stress and clean conversion for incumbency.",
+        raceName: "1996 Presidential Election",
+        incumbentParty: "Democratic Party",
+        incumbentCandidate: "Bill Clinton",
+        challengerCandidate: "Bob Dole",
+        values: {},
+        notes: "Retrospective fit: low formal/lived stress and weak challenger conversion pressure."
+      },
+      {
+        id: "1988",
+        title: "1988: Republicans hold",
+        meta: "Open seat with continuity transfer.",
+        raceName: "1988 Presidential Election",
+        incumbentParty: "Republican Party",
+        incumbentCandidate: "George H. W. Bush",
+        challengerCandidate: "Michael Dukakis",
+        values: {},
+        notes: "Retrospective fit: open-seat stress tempered by continuity from popular incumbent cycle."
+      },
+      {
+        id: "1984",
+        title: "1984: Republicans hold",
+        meta: "Low stress near-landslide environment.",
+        raceName: "1984 Presidential Election",
+        incumbentParty: "Republican Party",
+        incumbentCandidate: "Ronald Reagan",
+        challengerCandidate: "Walter Mondale",
+        values: {},
+        notes: "Retrospective fit: low stress across institutional, economic, and candidate-affect layers."
+      },
+      {
+        id: "1976",
+        title: "1976: Republicans lose",
+        meta: "Watergate-era legitimacy drag persists.",
+        raceName: "1976 Presidential Election",
+        incumbentParty: "Republican Party",
+        incumbentCandidate: "Gerald Ford",
+        challengerCandidate: "Jimmy Carter",
+        values: {},
+        notes: "Retrospective fit: high legitimacy stress despite partial economic stabilization."
+      },
+      {
+        id: "1972",
+        title: "1972: Republicans hold",
+        meta: "High opposition-threat offset despite stress.",
+        raceName: "1972 Presidential Election",
+        incumbentParty: "Republican Party",
+        incumbentCandidate: "Richard Nixon",
+        challengerCandidate: "George McGovern",
+        values: {},
+        notes: "Retrospective fit: offset layer dominates despite legitimacy strain."
+      },
+      {
+        id: "1964",
+        title: "1964: Democrats hold",
+        meta: "Low stress with extremely high challenger-threat offset.",
+        raceName: "1964 Presidential Election",
+        incumbentParty: "Democratic Party",
+        incumbentCandidate: "Lyndon Johnson",
+        challengerCandidate: "Barry Goldwater",
+        values: {},
+        notes: "Retrospective fit: opposition threat sharply reduced incumbent stress."
+      },
+      {
+        id: "1960",
+        title: "1960: Republicans lose narrowly",
+        meta: "Competitive low-to-mid stress open-seat race.",
+        raceName: "1960 Presidential Election",
+        incumbentParty: "Republican Party",
+        incumbentCandidate: "Richard Nixon",
+        challengerCandidate: "John F. Kennedy",
+        values: {},
+        notes: "Retrospective fit: competitive stress plus candidate-affect edge for challenger."
+      },
+      {
+        id: "1956",
+        title: "1956: Republicans hold",
+        meta: "Low stress and strong incumbent affect.",
+        raceName: "1956 Presidential Election",
+        incumbentParty: "Republican Party",
+        incumbentCandidate: "Dwight Eisenhower",
+        challengerCandidate: "Adlai Stevenson",
+        values: {},
+        notes: "Retrospective fit: low stress and high incumbency credibility."
+      },
+      {
+        id: "1952",
+        title: "1952: Democrats lose",
+        meta: "War fatigue and party fatigue raise stress.",
+        raceName: "1952 Presidential Election",
+        incumbentParty: "Democratic Party",
+        incumbentCandidate: "Adlai Stevenson",
+        challengerCandidate: "Dwight Eisenhower",
+        values: {},
+        notes: "Retrospective fit: foreign-policy and institutional fatigue plus open-seat vulnerability."
+      },
+      {
+        id: "1948",
+        title: "1948: Democrats hold upset",
+        meta: "Competitive race resolved by coalition retention.",
+        raceName: "1948 Presidential Election",
+        incumbentParty: "Democratic Party",
+        incumbentCandidate: "Harry Truman",
+        challengerCandidate: "Thomas Dewey",
+        values: {},
+        notes: "Retrospective fit: instability did not convert into challenger victory."
       }
     ];
+
+    let falsifiabilityTouched = false;
 
     function buildSectionsFromContext(model) {
       const srcSections = model.sections;
       if (!srcSections) throw new Error("Invalid model data: missing sections");
-      const out = [];
-      for (const meta of SECTION_META) {
+      return SECTION_META.map(meta => {
         const src = srcSections[meta.jsonKey];
-        if (!src || !src.factors) {
-          console.warn("Missing section", meta.jsonKey);
-          continue;
-        }
-        const factors = [];
-        for (const [factorId, spec] of Object.entries(src.factors)) {
-          factors.push({
-            id: factorId,
-            name: spec.label,
-            max: spec.max,
-            guidance: spec.guidance || {},
-            historicalAnchors: spec.historicalAnchors || {}
-          });
-        }
-        out.push({
+        const factors = Object.entries(src.factors || {}).map(([factorId, spec]) => ({
+          id: factorId,
+          name: spec.label,
+          max: 5,
+          originalMax: Number(spec.max) || 5,
+          guidance: spec.guidance || {},
+          historicalAnchors: spec.historicalAnchors || {}
+        }));
+        return {
           id: meta.id,
           jsonKey: meta.jsonKey,
           title: meta.title,
           description: src.description || "",
-          max: src.max,
           isOffset: meta.isOffset,
+          weight: SECTION_WEIGHTS[meta.id] || 0,
+          rawMax: factors.length * 5,
           factors
-        });
-      }
-      return out;
-    }
-
-    function initializeValues() {
-      sections.forEach(section => {
-        section.factors.forEach(factor => {
-          if (factorValues[factor.id] === undefined) {
-            factorValues[factor.id] = 0;
-          }
-        });
+        };
       });
     }
 
-    function clampPresetFactor(id, v) {
+    function initializeValues() {
+      sections.forEach(section => section.factors.forEach(factor => {
+        if (factorValues[factor.id] === undefined) factorValues[factor.id] = 0;
+      }));
+    }
+
+    function getFactorById(id) {
+      for (const section of sections) {
+        const found = section.factors.find(f => f.id === id);
+        if (found) return found;
+      }
+      return null;
+    }
+
+    function normalizeIncomingFactorValue(id, value, alreadyNormalized) {
       const f = getFactorById(id);
       if (!f) return 0;
-      return clamp(Number(v) || 0, 0, f.max);
+      const n = Number(value) || 0;
+      if (alreadyNormalized) return clamp(Math.round(n), 0, 5);
+      return clamp(Math.round((n / Math.max(1, f.originalMax)) * 5), 0, 5);
     }
 
     function pickNearestMapEntry(map, n) {
       if (!map || typeof map !== "object") return null;
-      for (let v = n; v >= 0; v--) {
+      const nearest = Math.round((n / 5) * 5);
+      for (let v = nearest; v >= 0; v--) {
         const k = String(v);
         if (Object.prototype.hasOwnProperty.call(map, k)) return map[k];
       }
@@ -1568,11 +1796,7 @@
 
     function sortedNumericKeys(obj) {
       if (!obj || typeof obj !== "object") return [];
-      return Object.keys(obj)
-        .map(k => Number(k))
-        .filter(n => !Number.isNaN(n))
-        .sort((a, b) => a - b)
-        .map(n => String(n));
+      return Object.keys(obj).map(k => Number(k)).filter(n => !Number.isNaN(n)).sort((a, b) => a - b).map(String);
     }
 
     function escapeAttr(s) {
@@ -1581,37 +1805,17 @@
 
     function truncateAttr(s, max) {
       const t = String(s);
-      if (t.length <= max) return t;
-      return `${t.slice(0, Math.max(0, max - 1))}…`;
+      return t.length <= max ? t : `${t.slice(0, Math.max(0, max - 1))}…`;
     }
 
     function buildFactorNameTooltip(factor) {
-      const rubricParts = [];
-      for (const k of sortedNumericKeys(factor.guidance)) {
-        rubricParts.push(`${k}: ${factor.guidance[k]}`);
-      }
-      let text = rubricParts.length ? `Rubric — ${rubricParts.join(" • ")}` : "No rubric text.";
-      const anchorParts = [];
-      for (const k of sortedNumericKeys(factor.historicalAnchors)) {
-        const v = factor.historicalAnchors[k];
-        anchorParts.push(`${k}: ${Array.isArray(v) ? v.join("; ") : v}`);
-      }
-      if (anchorParts.length) text += ` | Anchors — ${anchorParts.join(" • ")}`;
-      return truncateAttr(text, 1700);
-    }
-
-    function buildSliderTooltip(factor, n, guidanceText, anchorStr) {
-      const line = typeof guidanceText === "string" && guidanceText
-        ? guidanceText
-        : "Nearest defined rubric step (see card below).";
-      let t = `Score ${n}/${factor.max}: ${line}`;
-      if (anchorStr) t += ` | Examples: ${anchorStr}`;
-      return truncateAttr(t, 900);
+      const rubricParts = sortedNumericKeys(factor.guidance).map(k => `${k}: ${factor.guidance[k]}`);
+      const anchorParts = sortedNumericKeys(factor.historicalAnchors).map(k => `${k}: ${Array.isArray(factor.historicalAnchors[k]) ? factor.historicalAnchors[k].join("; ") : factor.historicalAnchors[k]}`);
+      return truncateAttr(`0-5 rubric. ${rubricParts.join(" • ")}${anchorParts.length ? ` | Anchors: ${anchorParts.join(" • ")}` : ""}`, 1500);
     }
 
     function formatAnchors(val) {
-      if (!Array.isArray(val) || !val.length) return "";
-      return val.join(" · ");
+      return Array.isArray(val) && val.length ? val.join(" · ") : "";
     }
 
     function updateFactorGuidanceDisplay(factor) {
@@ -1621,35 +1825,12 @@
       const n = factorValues[factor.id] || 0;
       const g = pickNearestMapEntry(factor.guidance, n);
       const a = pickNearestMapEntry(factor.historicalAnchors, n);
-      el.textContent = "";
-      const label = document.createElement("div");
-      label.className = "guidance-label";
-      label.textContent = `Score ${n} — rubric`;
-      el.appendChild(label);
-      const p1 = document.createElement("p");
-      p1.textContent = typeof g === "string" && g ? g : "No exact rubric line for this integer in the embedded model; values shown use the nearest lower defined step.";
-      el.appendChild(p1);
+      el.innerHTML = `<div class="guidance-label">Score ${n}/5</div><p>${escapeHtml(typeof g === "string" && g ? g : "Use section benchmark panel if this subfactor has sparse rubric text.")}</p>`;
       const anchorStr = formatAnchors(a);
       if (anchorStr) {
-        const p2 = document.createElement("p");
-        const s = document.createElement("strong");
-        s.textContent = "Historical anchors: ";
-        p2.appendChild(s);
-        p2.appendChild(document.createTextNode(anchorStr));
-        el.appendChild(p2);
+        el.innerHTML += `<p><strong>Historical anchors:</strong> ${escapeHtml(anchorStr)}</p>`;
       }
-      if (inputEl) {
-        inputEl.setAttribute("title", buildSliderTooltip(factor, n, g, anchorStr));
-        inputEl.setAttribute("aria-valuenow", String(n));
-      }
-    }
-
-    function getFactorById(id) {
-      for (const section of sections) {
-        const found = section.factors.find(f => f.id === id);
-        if (found) return found;
-      }
-      return null;
+      if (inputEl) inputEl.setAttribute("title", truncateAttr(`Score ${n}/5${g ? `: ${g}` : ""}${anchorStr ? ` | ${anchorStr}` : ""}`, 900));
     }
 
     function renderPresetSelect() {
@@ -1670,7 +1851,7 @@
         const button = document.createElement("button");
         button.type = "button";
         button.className = "scenario-button";
-        button.innerHTML = `<div class="scenario-title">${escapeHtml(preset.title)}</div><div class="scenario-meta">${escapeHtml(preset.meta)}</div>`;
+        button.innerHTML = `<div class="scenario-title">${escapeHtml(preset.title)}</div><div class="scenario-meta">${escapeHtml(preset.meta)} · retrospective fit references are descriptive, not proof.</div>`;
         button.addEventListener("click", () => loadPresetById(preset.id));
         list.appendChild(button);
       });
@@ -1680,247 +1861,252 @@
       const container = document.getElementById("factorContainer");
       const placeholder = document.getElementById("bootPlaceholder");
       if (placeholder) placeholder.remove();
-
       container.innerHTML = "";
 
       sections.forEach(section => {
         const details = document.createElement("details");
         details.className = "section-wrap";
         details.open = true;
-        details.dataset.sectionId = section.id;
-
         const summary = document.createElement("summary");
-        const head = document.createElement("div");
-        head.className = "section-head-text";
-        const descHtml = section.description
-          ? `<div class="section-description">${escapeHtml(section.description)}</div>`
-          : "";
-        const secTip = section.description ? ` title="${escapeAttr(section.description)}"` : "";
-        head.innerHTML = `<strong${secTip}>${escapeHtml(section.title)}</strong>${descHtml}`;
-        const scoreSpan = document.createElement("span");
-        scoreSpan.className = "section-score";
-        scoreSpan.id = `section-score-${section.id}`;
-        scoreSpan.textContent = `0 / ${section.max}`;
-        summary.appendChild(head);
-        summary.appendChild(scoreSpan);
+        summary.innerHTML = `<div class="section-head-text"><strong>${escapeHtml(section.title)}</strong><div class="section-description">${escapeHtml(section.description)}</div></div><span class="section-score" id="section-score-${section.id}">Raw 0/${section.rawMax} · Weighted 0/${section.weight}</span>`;
         details.appendChild(summary);
+
+        const howTo = document.createElement("details");
+        howTo.className = "section-howto";
+        howTo.innerHTML = `<summary>How to score this (0–5)</summary><div class="howto-grid"><p>${escapeHtml(SECTION_EXAMPLES[section.id] || "Use the general 0–5 guidance and subfactor rubric lines.")}</p></div>`;
+        details.appendChild(howTo);
 
         const body = document.createElement("div");
         body.className = "section-body-inner";
-
         section.factors.forEach(factor => {
           const factorEl = document.createElement("div");
           factorEl.className = "factor";
-          const nameTip = escapeAttr(buildFactorNameTooltip(factor));
           factorEl.innerHTML = `
             <div class="factor-line">
-              <div class="factor-name-wrap">
-                <span class="factor-name has-tip" title="${nameTip}">${escapeHtml(factor.name)}</span>
-              </div>
-              <div class="factor-value"><span id="value-${factor.id}">${factorValues[factor.id]}</span> / ${factor.max}</div>
+              <div class="factor-name-wrap"><span class="factor-name has-tip" title="${escapeAttr(buildFactorNameTooltip(factor))}">${escapeHtml(factor.name)}</span></div>
+              <div class="factor-value"><span id="value-${factor.id}">${factorValues[factor.id] || 0}</span> / 5</div>
             </div>
-            <input type="range" min="0" max="${factor.max}" step="1" value="${factorValues[factor.id]}" id="input-${factor.id}" aria-valuemin="0" aria-valuemax="${factor.max}" aria-valuenow="${factorValues[factor.id] || 0}" aria-label="${escapeAttr(factor.name)}" aria-describedby="guidance-${factor.id}" />
+            <input type="range" min="0" max="5" step="1" value="${factorValues[factor.id] || 0}" id="input-${factor.id}" aria-label="${escapeAttr(factor.name)}" aria-describedby="guidance-${factor.id}" />
             <div class="factor-guidance" id="guidance-${factor.id}" role="region" aria-live="polite"></div>
           `;
           body.appendChild(factorEl);
         });
-
         details.appendChild(body);
         container.appendChild(details);
       });
 
-      sections.forEach(section => {
-        section.factors.forEach(factor => {
-          document.getElementById(`input-${factor.id}`).addEventListener("input", event => {
-            factorValues[factor.id] = Number(event.target.value);
-            scheduleSave();
-            updateAll();
-          });
-          updateFactorGuidanceDisplay(factor);
+      sections.forEach(section => section.factors.forEach(factor => {
+        document.getElementById(`input-${factor.id}`).addEventListener("input", event => {
+          factorValues[factor.id] = clamp(Number(event.target.value) || 0, 0, 5);
+          scheduleSave();
+          updateAll();
         });
-      });
-    }
-
-    function calculateSectionScore(section) {
-      return section.factors.reduce((sum, factor) => sum + (factorValues[factor.id] || 0), 0);
+      }));
     }
 
     function calculateScores() {
       const sectionScores = {};
+      const sectionWeighted = {};
       sections.forEach(section => {
-        sectionScores[section.id] = calculateSectionScore(section);
+        const raw = section.factors.reduce((sum, factor) => sum + (factorValues[factor.id] || 0), 0);
+        const weighted = section.rawMax ? (raw / section.rawMax) * section.weight : 0;
+        sectionScores[section.id] = raw;
+        sectionWeighted[section.id] = weighted;
       });
+      const stress = clamp(
+        sectionWeighted.institutional + sectionWeighted.formalEconomy + sectionWeighted.livedMaterial +
+        sectionWeighted.legitimacy + sectionWeighted.foreignMilitary + sectionWeighted.candidateAffect -
+        sectionWeighted.oppositionOffset, 0, 100
+      );
+      const electoral = clamp(sectionWeighted.electoralConversion, 0, 30);
+      const democraticRisk = clamp(sectionWeighted.democraticRisk, 0, 30);
+      const convertedScore = clamp(stress + electoral * 0.35, 0, 100);
+      return { sectionScores, sectionWeighted, stress, electoral, democraticRisk, convertedScore };
+    }
 
-      const rawStress =
-        sectionScores.institutional +
-        sectionScores.formalEconomy +
-        sectionScores.livedMaterial +
-        sectionScores.legitimacy +
-        sectionScores.foreignMilitary +
-        sectionScores.candidateAffect -
-        sectionScores.oppositionOffset;
+    function distributeTargetAcrossFactors(factorIds, targetRaw) {
+      const out = {};
+      if (!factorIds.length) return out;
+      let remaining = clamp(Math.round(targetRaw), 0, factorIds.length * 5);
+      factorIds.forEach((id, idx) => {
+        const slotsLeft = factorIds.length - idx;
+        const pick = clamp(Math.round(remaining / slotsLeft), 0, 5);
+        out[id] = pick;
+        remaining -= pick;
+      });
+      return out;
+    }
 
-      const stress = clamp(rawStress, 0, 100);
-      const electoral = sectionScores.electoralConversion;
-      const democraticRisk = sectionScores.democraticRisk;
-      const effectiveStress = clamp(stress + Math.round(electoral * 0.35), 0, 100);
-
-      return { sectionScores, stress, electoral, democraticRisk, effectiveStress };
+    function deriveRetrospectivePresetValues(presetId) {
+      if (!modelContext || !modelContext.historicalPresets || !modelContext.historicalPresets[presetId]) return {};
+      const indicative = modelContext.historicalPresets[presetId].indicativeScores || {};
+      const byJsonKey = {
+        institutionalStress: "institutional",
+        formalEconomicStress: "formalEconomy",
+        livedMaterialStress: "livedMaterial",
+        legitimacyMoralInjuryStress: "legitimacy",
+        foreignMilitaryStress: "foreignMilitary",
+        candidateAffectCoalitionFit: "candidateAffect",
+        oppositionThreatOffset: "oppositionOffset",
+        electoralCollegeConversion: "electoralConversion",
+        democraticConversionRisk: "democraticRisk"
+      };
+      const values = {};
+      Object.entries(byJsonKey).forEach(([jsonKey, sectionId]) => {
+        const section = sections.find(s => s.id === sectionId);
+        if (!section) return;
+        const targetWeighted = Number(indicative[jsonKey]) || 0;
+        const targetRaw = (targetWeighted / Math.max(1, section.weight)) * section.rawMax;
+        Object.assign(values, distributeTargetAcrossFactors(section.factors.map(f => f.id), targetRaw));
+      });
+      return values;
     }
 
     function classifyStress(stress) {
-      if (stress >= 65) {
-        return {
-          label: "Incumbent-party collapse likely",
-          css: "bad",
-          color: "var(--bad)",
-          summary: "The White House party faces severe accumulated stress. The challenger is strongly favored unless Electoral College conversion or opposition-threat dynamics rescue the incumbent."
-        };
-      }
-      if (stress >= 50) {
-        return {
-          label: "Challenger favored",
-          css: "bad",
-          color: "var(--bad)",
-          summary: "The White House party is in the danger zone. Material, legitimacy, institutional, or candidate-affect stress is strong enough to make the challenger favored."
-        };
-      }
-      if (stress >= 35) {
-        return {
-          label: "Competitive / unstable",
-          css: "warn",
-          color: "var(--warn)",
-          summary: "The White House party is vulnerable, but the race depends on conversion geography, opposition threat, turnout, and democratic machinery risk."
-        };
-      }
-      return {
-        label: "Incumbent party favored",
-        css: "good",
-        color: "var(--good)",
-        summary: "The White House party has manageable stress. The incumbent-party candidate is favored unless Electoral College conversion or democratic conversion problems intervene."
-      };
+      if (stress >= 65) return { label: "Collapse Risk", css: "bad", color: "var(--bad)" };
+      if (stress >= 50) return { label: "Challenger Favored", css: "bad", color: "var(--bad)" };
+      if (stress >= 35) return { label: "Competitive", css: "warn", color: "var(--warn)" };
+      if (stress >= 25) return { label: "Incumbent Favored", css: "warn", color: "var(--warn)" };
+      return { label: "Strong Incumbent Favored", css: "good", color: "var(--good)" };
     }
 
-    function classifyPopularMandate(stress) {
-      const incumbent = document.getElementById("incumbentCandidate").value.trim() || "Incumbent nominee";
-      const challenger = document.getElementById("challengerCandidate").value.trim() || "Challenger nominee";
-
-      if (stress >= 65) return `${challenger} is strongly favored on voter-pressure / popular-mandate logic because incumbent-party stress is severe.`;
-      if (stress >= 50) return `${challenger} is favored on voter-pressure logic, though the race may still depend on Electoral College geography and opposition-threat effects.`;
-      if (stress >= 35) return `Popular mandate is unstable. ${incumbent} may survive, but voter-pressure conditions are dangerous enough for ${challenger} to plausibly win.`;
-      return `${incumbent} is favored on voter-pressure / popular-mandate logic because incumbent-party stress is low.`;
+    function machineryRiskLabel(v) {
+      if (v >= 22) return "Severe";
+      if (v >= 14) return "High";
+      if (v >= 7) return "Medium";
+      return "Low";
     }
 
-    function classifyConvertedOutcome(stress, electoral, democraticRisk) {
-      const incumbent = document.getElementById("incumbentCandidate").value.trim() || "Incumbent nominee";
-      const challenger = document.getElementById("challengerCandidate").value.trim() || "Challenger nominee";
-      const effective = clamp(stress + Math.round(electoral * 0.35), 0, 100);
-      let base;
-
-      if (effective >= 65) base = `${challenger} is strongly favored in the converted outcome.`;
-      else if (effective >= 50) base = `${challenger} is favored in the converted outcome.`;
-      else if (effective >= 35) base = `Converted outcome is competitive; geography could decide whether ${incumbent} or ${challenger} wins.`;
-      else base = `${incumbent} is favored in the converted outcome.`;
-
-      if (democraticRisk >= 22) {
-        return `${base} Democratic conversion risk is catastrophic: voter intent could be distorted by courts, disputed counts, certification fights, suppression, or violence.`;
-      }
-      if (democraticRisk >= 14) {
-        return `${base} Democratic conversion risk is high enough that the model should flag litigation, certification, ballot, and intimidation scenarios.`;
-      }
-      if (democraticRisk >= 7) {
-        return `${base} Democratic conversion risk is moderate but not central unless margins are extremely close.`;
-      }
-      return `${base} Democratic conversion risk is low under the current assumptions.`;
+    function convertedOutcomeLabel(convertedScore) {
+      if (convertedScore >= 50) return "Challenger Win";
+      if (convertedScore >= 35) return "High Uncertainty Flip";
+      return "Incumbent Party Hold";
     }
 
-    function calculateConfidence(stress, democraticRisk) {
-      const distances = [Math.abs(stress - 35), Math.abs(stress - 50), Math.abs(stress - 65)];
+    function electionFarAwayPenalty() {
+      const race = (document.getElementById("raceName").value || "").trim();
+      const match = race.match(/(19|20)\d{2}/);
+      if (!match) return { flag: false, points: 0 };
+      const electionDate = new Date(Number(match[0]), 10, 5);
+      const now = new Date(document.getElementById("predictionTimestamp").value || new Date());
+      const months = (electionDate.getFullYear() - now.getFullYear()) * 12 + (electionDate.getMonth() - now.getMonth());
+      return { flag: months > 12, points: months > 12 ? 12 : 0 };
+    }
+
+    function nomineeUnknownPenalty() {
+      const inc = (document.getElementById("incumbentCandidate").value || "").toLowerCase();
+      const ch = (document.getElementById("challengerCandidate").value || "").toLowerCase();
+      const unknown = /(tbd|unknown|challenger|nominee|successor)/.test(`${inc} ${ch}`);
+      return { flag: unknown, points: unknown ? 10 : 0 };
+    }
+
+    function calculateConfidence(scores) {
+      const distances = [25, 35, 50, 65].map(th => Math.abs(scores.stress - th));
       const minDistance = Math.min(...distances);
-      const base = clamp(48 + minDistance * 3, 45, 88);
-      const penalty = democraticRisk >= 22 ? 18 : democraticRisk >= 14 ? 10 : democraticRisk >= 7 ? 5 : 0;
-      return clamp(Math.round(base - penalty), 35, 90);
+      const thresholdComponent = clamp(45 + minDistance * 4, 45, 90);
+      const far = electionFarAwayPenalty();
+      const unknown = nomineeUnknownPenalty();
+      const machineryPenalty = scores.democraticRisk >= 22 ? 18 : scores.democraticRisk >= 14 ? 11 : scores.democraticRisk >= 7 ? 5 : 0;
+      const score = clamp(Math.round(thresholdComponent - far.points - unknown.points - machineryPenalty), 25, 92);
+      return { score, far, unknown };
+    }
+
+    function topDrivers(scores) {
+      const topSections = sections
+        .filter(s => !s.isOffset && !["electoralConversion", "democraticRisk"].includes(s.id))
+        .map(s => ({ label: s.title, val: scores.sectionWeighted[s.id] }))
+        .sort((a, b) => b.val - a.val)
+        .slice(0, 3)
+        .map(x => `${x.label} (${x.val.toFixed(1)})`);
+      const topFactors = Object.entries(factorValues)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([id, val]) => `${getFactorById(id)?.name || id} (${val}/5)`);
+      return { topSections, topFactors };
+    }
+
+    function buildAutoFalsifiability(scores) {
+      const lines = [];
+      lines.push(`- If weighted lived-material + legitimacy drops by >= 6 points before Election Day, this forecast weakens.`);
+      lines.push(`- If Opposition Threat Offset rises above 15/25 after nominees are set, incumbent downside is overstated.`);
+      if (scores.democraticRisk >= 14) lines.push(`- If machinery risk materially de-escalates below 10/30, converted-outcome risk assumptions are too pessimistic.`);
+      if (scores.stress < 35) lines.push(`- If incumbent stress rises above 50 and remains there for 8+ weeks, current incumbent-favored read is falsified.`);
+      else lines.push(`- If incumbent stress falls below 35 and remains there for 8+ weeks, current challenger/competitive read is falsified.`);
+      return lines.join("\n");
+    }
+
+    function updateWarnings(scores, confidence) {
+      const badges = [];
+      if (confidence.unknown.flag) badges.push(`<span class="warning-badge warn">Nominee unknown</span>`);
+      if (confidence.far.flag) badges.push(`<span class="warning-badge warn">Election > 12 months away</span>`);
+      if (scores.democraticRisk >= 14) badges.push(`<span class="warning-badge purple">Machinery risk ${machineryRiskLabel(scores.democraticRisk)}</span>`);
+      if (convertedOutcomeLabel(scores.convertedScore) !== (scores.stress >= 50 ? "Challenger Win" : "Incumbent Party Hold")) badges.push(`<span class="warning-badge bad">Converted outcome differs from mandate trend</span>`);
+      document.getElementById("warningBadges").innerHTML = badges.join("");
     }
 
     function updateAll() {
       if (!sections.length) return;
-
       const scores = calculateScores();
       const classification = classifyStress(scores.stress);
-      const confidence = calculateConfidence(scores.stress, scores.democraticRisk);
-
+      const confidence = calculateConfidence(scores);
       sections.forEach(section => {
-        const sectionScore = scores.sectionScores[section.id];
+        const raw = scores.sectionScores[section.id];
+        const weighted = scores.sectionWeighted[section.id];
         const scoreEl = document.getElementById(`section-score-${section.id}`);
-        if (scoreEl) {
-          const prefix = section.isOffset ? "Offset " : "";
-          scoreEl.textContent = `${prefix}${sectionScore} / ${section.max}`;
-        }
+        if (scoreEl) scoreEl.textContent = `Raw ${raw.toFixed(1)}/${section.rawMax} · Weighted ${weighted.toFixed(1)}/${section.weight}${section.isOffset ? " subtractive" : ""}`;
         section.factors.forEach(factor => {
+          const v = factorValues[factor.id] || 0;
           const valueEl = document.getElementById(`value-${factor.id}`);
-          const inputEl = document.getElementById(`input-${factor.id}`);
-          if (valueEl) valueEl.textContent = factorValues[factor.id] || 0;
-          if (inputEl && Number(inputEl.value) !== Number(factorValues[factor.id])) {
-            inputEl.value = factorValues[factor.id] || 0;
-          }
+          if (valueEl) valueEl.textContent = v;
           updateFactorGuidanceDisplay(factor);
         });
       });
 
-      document.getElementById("stressScore").textContent = scores.stress;
-      document.getElementById("electoralScore").textContent = scores.electoral;
-      document.getElementById("conversionRiskScore").textContent = scores.democraticRisk;
-      document.getElementById("confidenceScore").textContent = `${confidence}%`;
-
+      document.getElementById("stressScore").textContent = scores.stress.toFixed(1);
+      document.getElementById("electoralScore").textContent = scores.electoral.toFixed(1);
+      document.getElementById("conversionRiskScore").textContent = scores.democraticRisk.toFixed(1);
+      document.getElementById("confidenceScore").textContent = `${confidence.score}%`;
       const pill = document.getElementById("resultPill");
       pill.className = `pill ${classification.css}`;
       pill.textContent = classification.label;
-
-      const matchupEl = document.getElementById("resultBannerMatchup");
-      if (matchupEl) {
-        const inc = document.getElementById("incumbentCandidate").value.trim() || "Incumbent nominee";
-        const ch = document.getElementById("challengerCandidate").value.trim() || "Challenger nominee";
-        matchupEl.innerHTML = `${escapeHtml(inc)} <span class="vs">vs</span> ${escapeHtml(ch)}`;
-      }
-
+      const inc = document.getElementById("incumbentCandidate").value.trim() || "Incumbent nominee";
+      const ch = document.getElementById("challengerCandidate").value.trim() || "Challenger nominee";
+      document.getElementById("resultBannerMatchup").innerHTML = `${escapeHtml(inc)} <span class="vs">vs</span> ${escapeHtml(ch)}`;
       document.getElementById("mainPrediction").textContent = classification.label;
-      document.getElementById("predictionExplanation").textContent = classification.summary;
-
+      document.getElementById("predictionExplanation").textContent = `${convertedOutcomeLabel(scores.convertedScore)} with ${machineryRiskLabel(scores.democraticRisk)} machinery risk. Historical presets are retrospective fit, not proven predictive accuracy.`;
       const bar = document.getElementById("stressBar");
       bar.style.width = `${scores.stress}%`;
       bar.style.background = classification.color;
-
-      document.getElementById("popularMandateText").textContent = classifyPopularMandate(scores.stress);
-      document.getElementById("convertedOutcomeText").textContent = classifyConvertedOutcome(scores.stress, scores.electoral, scores.democraticRisk);
-
-      const rb = document.getElementById("resultBanner");
-      rb.setAttribute("aria-busy", "false");
+      document.getElementById("popularMandateText").textContent = `Primary band: ${classification.label}.`;
+      document.getElementById("convertedOutcomeText").textContent = `Converted outcome: ${convertedOutcomeLabel(scores.convertedScore)} (score ${scores.convertedScore.toFixed(1)}). Machinery risk: ${machineryRiskLabel(scores.democraticRisk)}.`;
+      updateWarnings(scores, confidence);
+      if (!falsifiabilityTouched || !document.getElementById("falsifiabilityConditions").value.trim()) {
+        document.getElementById("falsifiabilityConditions").value = buildAutoFalsifiability(scores);
+      }
+      document.getElementById("resultBanner").setAttribute("aria-busy", "false");
     }
 
     function loadPresetById(id) {
       const preset = presets.find(p => p.id === id);
       if (!preset) return;
-
       document.getElementById("presetSelect").value = preset.id;
       document.getElementById("raceName").value = preset.raceName || "";
       document.getElementById("incumbentParty").value = preset.incumbentParty || "";
       document.getElementById("incumbentCandidate").value = preset.incumbentCandidate || "";
       document.getElementById("challengerCandidate").value = preset.challengerCandidate || "";
       document.getElementById("analystNotes").value = preset.notes || "";
-
+      const presetValues = Object.keys(preset.values || {}).length ? preset.values : deriveRetrospectivePresetValues(preset.id);
       Object.keys(factorValues).forEach(key => {
-        factorValues[key] = clampPresetFactor(key, preset.values[key] !== undefined ? preset.values[key] : 0);
+        factorValues[key] = normalizeIncomingFactorValue(key, presetValues[key] !== undefined ? presetValues[key] : 0, false);
       });
-
+      falsifiabilityTouched = false;
       scheduleSave();
       updateAll();
       syncBaselineVisibility();
     }
 
     function resetNeutral() {
-      try {
-        localStorage.removeItem(STORAGE_KEY);
-      } catch (_) {}
+      try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
       loadPresetById("neutral");
     }
 
@@ -1937,12 +2123,16 @@
     function saveState() {
       try {
         const payload = {
+          normalizedV2: true,
           factorValues: { ...factorValues },
           raceName: document.getElementById("raceName").value,
           incumbentParty: document.getElementById("incumbentParty").value,
           incumbentCandidate: document.getElementById("incumbentCandidate").value,
           challengerCandidate: document.getElementById("challengerCandidate").value,
           analystNotes: document.getElementById("analystNotes").value,
+          falsifiabilityConditions: document.getElementById("falsifiabilityConditions").value,
+          modelVersion: document.getElementById("modelVersion").value,
+          predictionTimestamp: document.getElementById("predictionTimestamp").value,
           presetId: document.getElementById("presetSelect").value
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
@@ -1954,14 +2144,11 @@
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) saved = JSON.parse(raw);
-      } catch (_) {
-        saved = null;
-      }
-
+      } catch (_) {}
       if (saved && saved.factorValues && typeof saved.factorValues === "object") {
         Object.keys(factorValues).forEach(key => {
           if (saved.factorValues[key] !== undefined) {
-            factorValues[key] = clampPresetFactor(key, saved.factorValues[key]);
+            factorValues[key] = normalizeIncomingFactorValue(key, saved.factorValues[key], !!saved.normalizedV2);
           }
         });
         if (saved.raceName !== undefined) document.getElementById("raceName").value = saved.raceName;
@@ -1969,6 +2156,9 @@
         if (saved.incumbentCandidate !== undefined) document.getElementById("incumbentCandidate").value = saved.incumbentCandidate;
         if (saved.challengerCandidate !== undefined) document.getElementById("challengerCandidate").value = saved.challengerCandidate;
         if (saved.analystNotes !== undefined) document.getElementById("analystNotes").value = saved.analystNotes;
+        if (saved.falsifiabilityConditions !== undefined) document.getElementById("falsifiabilityConditions").value = saved.falsifiabilityConditions;
+        if (saved.modelVersion !== undefined) document.getElementById("modelVersion").value = saved.modelVersion;
+        if (saved.predictionTimestamp !== undefined) document.getElementById("predictionTimestamp").value = saved.predictionTimestamp;
         if (saved.presetId) document.getElementById("presetSelect").value = saved.presetId;
       } else {
         loadPresetById(BASELINE_PRESET_ID);
@@ -1977,45 +2167,51 @@
 
     async function copySummary() {
       const scores = calculateScores();
-      const classification = classifyStress(scores.stress);
-      const raceName = document.getElementById("raceName").value.trim();
-      const incumbentParty = document.getElementById("incumbentParty").value.trim();
-      const incumbent = document.getElementById("incumbentCandidate").value.trim();
-      const challenger = document.getElementById("challengerCandidate").value.trim();
-      const notes = document.getElementById("analystNotes").value.trim();
-
+      const cls = classifyStress(scores.stress);
+      const confidence = calculateConfidence(scores);
+      const converted = convertedOutcomeLabel(scores.convertedScore);
+      const confidenceLevel = confidence.score >= 75 ? "High" : confidence.score >= 55 ? "Medium" : "Low";
+      const drivers = topDrivers(scores);
       const sectionLines = sections.map(section => {
-        const score = scores.sectionScores[section.id];
-        const label = section.isOffset ? `${section.title}: -${score}/${section.max}` : `${section.title}: ${score}/${section.max}`;
-        return label;
+        const weighted = scores.sectionWeighted[section.id];
+        return `- ${section.title}: ${weighted.toFixed(1)} / ${section.weight}${section.isOffset ? " subtractive" : section.id === "electoralConversion" || section.id === "democraticRisk" ? " separate" : ""}`;
       }).join("\n");
-
-      const summary = [
-        `Historical Legitimacy Stress Model Summary`,
-        `Race: ${raceName}`,
-        `White House party: ${incumbentParty}`,
-        `Incumbent-party candidate: ${incumbent}`,
-        `Challenger: ${challenger}`,
-        `Prediction: ${classification.label}`,
-        `Incumbent Stress Score: ${scores.stress}/100`,
-        `Electoral Conversion Score: ${scores.electoral}/30`,
-        `Democratic Conversion Risk: ${scores.democraticRisk}/30`,
+      const text = [
+        `Election Cycle: ${document.getElementById("raceName").value.trim() || "Custom"}`,
+        `Model Version: ${document.getElementById("modelVersion").value.trim() || "v2.0-testable"}`,
+        `Prediction Timestamp: ${document.getElementById("predictionTimestamp").value || new Date().toISOString().slice(0, 10)}`,
+        `Incumbent Party: ${document.getElementById("incumbentParty").value.trim() || "N/A"}`,
+        `Incumbent-Party Candidate: ${document.getElementById("incumbentCandidate").value.trim() || "N/A"}`,
+        `Challenger Candidate: ${document.getElementById("challengerCandidate").value.trim() || "N/A"}`,
         ``,
+        `Headline Incumbent Stress: ${scores.stress.toFixed(1)} / 100`,
+        `Primary Band: ${cls.label}`,
+        ``,
+        `Converted Outcome Prediction: ${converted}`,
+        `Electoral College Confidence: ${confidenceLevel}`,
+        `Democratic Machinery Risk: ${machineryRiskLabel(scores.democraticRisk)}`,
+        ``,
+        `Layer Scores:`,
         sectionLines,
         ``,
-        `Popular Mandate: ${classifyPopularMandate(scores.stress)}`,
-        `Converted Outcome: ${classifyConvertedOutcome(scores.stress, scores.electoral, scores.democraticRisk)}`,
-        notes ? `\nNotes: ${notes}` : ""
+        `Key Testable Drivers:`,
+        `Highest stress layers: ${drivers.topSections.join("; ")}`,
+        `Highest subfactors: ${drivers.topFactors.join("; ")}`,
+        ``,
+        `Falsifiability Conditions:`,
+        document.getElementById("falsifiabilityConditions").value.trim() || "None entered.",
+        ``,
+        `Analyst Notes:`,
+        document.getElementById("analystNotes").value.trim() || "None."
       ].join("\n");
-
       try {
-        await navigator.clipboard.writeText(summary);
+        await navigator.clipboard.writeText(text);
         const button = document.getElementById("copySummary");
         const old = button.textContent;
         button.textContent = "Copied";
         setTimeout(() => { button.textContent = old; }, 900);
-      } catch (error) {
-        window.prompt("Copy summary:", summary);
+      } catch (_) {
+        window.prompt("Copy prediction:", text);
       }
     }
 
@@ -2044,19 +2240,27 @@
         document.getElementById("themeToggle").textContent = document.body.classList.contains("light") ? "Dark" : "Light";
       });
 
-      ["raceName", "incumbentParty", "incumbentCandidate", "challengerCandidate", "analystNotes"].forEach(id => {
+      ["raceName", "incumbentParty", "incumbentCandidate", "challengerCandidate", "analystNotes", "modelVersion", "predictionTimestamp"].forEach(id => {
         document.getElementById(id).addEventListener("input", () => {
           scheduleSave();
           updateAll();
         });
       });
+      document.getElementById("falsifiabilityConditions").addEventListener("input", () => {
+        falsifiabilityTouched = true;
+        scheduleSave();
+      });
     }
 
     function bootstrapModel(model) {
+      modelContext = model;
       sections.length = 0;
       sections.push(...buildSectionsFromContext(model));
       Object.keys(factorValues).forEach(k => delete factorValues[k]);
       initializeValues();
+      if (!document.getElementById("predictionTimestamp").value) {
+        document.getElementById("predictionTimestamp").value = new Date().toISOString().slice(0, 10);
+      }
       renderPresetSelect();
       renderScenarioList();
       renderFactors();
