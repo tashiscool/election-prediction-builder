@@ -1330,9 +1330,9 @@
       formalEconomy: "0–1: 1984, 1996, 2024 formal layer • 2–3: 2012 slow recovery, 1992 recession memory • 4–5: 1980 stagflation, 2008 crisis, 2020 COVID recession",
       livedMaterial: "0–1: 1984, 1996, 1956 • 2–3: 2012, 2016 • 4–5: 1980, 2008, 2020, 2024",
       legitimacy: "0–1: 1956, 1984, 1996 • 2–3: 2004 Iraq drag, 2016 elite/donor issue • 4–5: 1968, 1976, 2020, 2024",
-      foreignMilitary: "0–1: 1996, 1984 • 2–3: 2004 Iraq drag, 2024 Gaza/Iran stress • 4–5: 1952 Korea, 1968 Vietnam, 1980 Iran hostage",
+      foreignMilitary: "0–1: 1996, 1984 • 2–3: 1960 Cold War confidence anxiety, 2004 Iraq drag • 4–5: 1952 Korea, 1968 Vietnam, 1980 Iran hostage",
       candidateAffect: "0–1: Eisenhower 1956, Reagan 1984, Obama 2008 • 2–3: Obama 2012, Bush 1988 • 4–5: Carter 1980, Clinton 2016, Harris 2024 critique",
-      oppositionOffset: "0–1: Obama 2008, Clinton 1992 as acceptable challengers • 2–3: Romney 2012, Kerry 2004 • 4–5: Goldwater 1964, Trump 2020/2024, McGovern 1972",
+      oppositionOffset: "0–1: Obama 2008, Clinton 1992 as acceptable challengers • 2–3: Romney 2012, Kerry 2004, 1960 identity/inexperience resistance • 4–5: Goldwater 1964, Trump 2020/2024, McGovern 1972",
       electoralConversion: "0–1: 1984, 1996, 2008 clean conversions • 2–3: 2004, 2012 • 4–5: 1888, 2000, 2016 split-risk elections",
       democraticRisk: "0–1: 1984, 1996, 2008 • 2–3: normal close modern elections • 4–5: 2000 Florida, 2020 fake elector/J6 risk, 1876 dispute"
     };
@@ -1713,7 +1713,7 @@
         incumbentCandidate: "Richard Nixon",
         challengerCandidate: "John F. Kennedy",
         values: {},
-        sectionTargets: { institutional: 10, formalEconomy: 10, livedMaterial: 8, legitimacy: 5, foreignMilitary: 2, candidateAffect: 5, oppositionOffset: 5, electoralConversion: 10, democraticRisk: 5 },
+        sectionTargets: { institutional: 10, formalEconomy: 8, livedMaterial: 7, legitimacy: 5, foreignMilitary: 5, candidateAffect: 7, oppositionOffset: 5, electoralConversion: 6, democraticRisk: 3 },
         notes: "Retrospective fit: competitive stress plus candidate-affect edge for challenger."
       },
       {
@@ -1725,7 +1725,7 @@
         incumbentCandidate: "Dwight Eisenhower",
         challengerCandidate: "Adlai Stevenson",
         values: {},
-        sectionTargets: { institutional: 1, formalEconomy: 1, livedMaterial: 1, legitimacy: 1, foreignMilitary: 1, candidateAffect: 0, oppositionOffset: 12, electoralConversion: 0, democraticRisk: 0 },
+        sectionTargets: { institutional: 1, formalEconomy: 1, livedMaterial: 1, legitimacy: 1, foreignMilitary: 2, candidateAffect: 0, oppositionOffset: 2, electoralConversion: 0, democraticRisk: 0 },
         notes: "Retrospective fit: low stress and high incumbency credibility."
       },
       {
@@ -1767,6 +1767,107 @@
     ];
 
     let falsifiabilityTouched = false;
+
+    function syncHistoricalContextFromPresets(model) {
+      if (!model || !model.historicalPresets) return;
+      const sectionToJson = {
+        institutional: "institutionalStress",
+        formalEconomy: "formalEconomicStress",
+        livedMaterial: "livedMaterialStress",
+        legitimacy: "legitimacyMoralInjuryStress",
+        foreignMilitary: "foreignMilitaryStress",
+        candidateAffect: "candidateAffectCoalitionFit",
+        oppositionOffset: "oppositionThreatOffset",
+        electoralConversion: "electoralCollegeConversion",
+        democraticRisk: "democraticConversionRisk"
+      };
+      presets.forEach(preset => {
+        if (!preset.sectionTargets || ["neutral", BASELINE_PRESET_ID].includes(preset.id)) return;
+        if (!model.historicalPresets[preset.id]) {
+          model.historicalPresets[preset.id] = {
+            whiteHouseParty: String(preset.incumbentParty || "").replace(" Party", ""),
+            actualOutcome: preset.title,
+            modelRead: preset.notes || "",
+            keyLessons: ["Runtime-synced from calibrated section targets."],
+            indicativeScores: {}
+          };
+        }
+        const indicative = model.historicalPresets[preset.id].indicativeScores || {};
+        Object.entries(sectionToJson).forEach(([sectionId, jsonKey]) => {
+          indicative[jsonKey] = Number(preset.sectionTargets[sectionId]) || 0;
+        });
+        indicative.incumbentStressTotal = clamp(
+          (indicative.institutionalStress || 0) +
+          (indicative.formalEconomicStress || 0) +
+          (indicative.livedMaterialStress || 0) +
+          (indicative.legitimacyMoralInjuryStress || 0) +
+          (indicative.foreignMilitaryStress || 0) +
+          (indicative.candidateAffectCoalitionFit || 0) -
+          (indicative.oppositionThreatOffset || 0), 0, 100
+        );
+        model.historicalPresets[preset.id].indicativeScores = indicative;
+      });
+    }
+
+    function harmonizeModelContext(model) {
+      if (!model || !model.sections) return model;
+      model.predictionBands = model.predictionBands || {};
+      model.predictionBands.incumbentStress = {
+        "0-24": "Strong incumbent favored",
+        "25-34": "Incumbent favored",
+        "35-49": "Competitive",
+        "50-64": "Challenger favored",
+        "65-100": "Collapse risk"
+      };
+
+      const institutional = model.sections.institutionalStress && model.sections.institutionalStress.factors;
+      if (institutional && !institutional.longTenureHealthRisk) {
+        institutional.longTenureHealthRisk = {
+          label: "Long-tenure / succession-health risk",
+          max: 3,
+          guidance: {
+            "0": "No visible tenure, health, or succession-confidence concern.",
+            "1": "Minor age/tenure chatter with little electoral salience.",
+            "2": "Visible concern that raises continuity risk.",
+            "3": "Sustained concern about tenure, health, or succession readiness."
+          },
+          historicalAnchors: {
+            "0": ["1996 Clinton", "2012 Obama"],
+            "2": ["1956 Eisenhower health-age concerns"],
+            "3": ["1944 FDR fourth-term health/succession concern"]
+          }
+        };
+      }
+
+      const foreign = model.sections.foreignMilitaryStress && model.sections.foreignMilitaryStress.factors;
+      if (foreign && !foreign.foreignSecurityConfidenceAnxiety) {
+        foreign.foreignSecurityConfidenceAnxiety = {
+          label: "Foreign/security confidence anxiety",
+          max: 2,
+          guidance: {
+            "0": "No meaningful confidence anxiety in foreign/security posture.",
+            "1": "Noticeable confidence anxiety without direct war failure.",
+            "2": "Confidence anxiety is electorally central even absent battlefield collapse."
+          },
+          historicalAnchors: {
+            "0": ["1996"],
+            "1": ["1948 early Cold War anxiety"],
+            "2": ["1960 missile-gap/U-2/Cuba confidence anxiety"]
+          }
+        };
+      }
+
+      const opposition = model.sections.oppositionThreatOffset;
+      if (opposition && opposition.factors) {
+        opposition.description = "Subtracts from incumbent stress when the challenger or challenger coalition is seen as unacceptable, risky, chaotic, or dangerous.";
+        if (opposition.factors.challengerExtremist) {
+          opposition.factors.challengerExtremist.label = "Challenger perceived unacceptable/extreme/risky";
+        }
+      }
+
+      syncHistoricalContextFromPresets(model);
+      return model;
+    }
 
     function buildSectionsFromContext(model) {
       const srcSections = model.sections;
@@ -2382,9 +2483,9 @@
     }
 
     function bootstrapModel(model) {
-      modelContext = model;
+      modelContext = harmonizeModelContext(model);
       sections.length = 0;
-      sections.push(...buildSectionsFromContext(model));
+      sections.push(...buildSectionsFromContext(modelContext));
       Object.keys(factorValues).forEach(k => delete factorValues[k]);
       initializeValues();
       migratePresetsToNormalizedScale();
