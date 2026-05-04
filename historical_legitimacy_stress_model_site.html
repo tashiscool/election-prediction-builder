@@ -68,6 +68,173 @@
       gap: 22px;
     }
 
+    .baseline-banner {
+      grid-column: 1 / -1;
+    }
+
+    .baseline-prose {
+      color: var(--text);
+      font-size: 0.93rem;
+      line-height: 1.55;
+    }
+
+    .baseline-prose h3 {
+      margin: 1.25rem 0 0.5rem;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .baseline-prose h4 {
+      margin: 0.75rem 0 0.35rem;
+      font-size: 0.88rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    .baseline-lead {
+      font-size: 1rem;
+      line-height: 1.55;
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .baseline-callout {
+      border-left: 4px solid rgba(96, 165, 250, 0.65);
+      padding: 12px 14px;
+      margin: 14px 0;
+      background: rgba(15, 23, 42, 0.55);
+      border-radius: 0 12px 12px 0;
+      font-size: 0.9rem;
+    }
+
+    body.light .baseline-callout {
+      background: rgba(241, 245, 249, 0.95);
+    }
+
+    .baseline-callout strong {
+      color: var(--text);
+    }
+
+    .baseline-kv {
+      display: grid;
+      gap: 6px;
+      margin: 12px 0;
+      font-size: 0.88rem;
+    }
+
+    .baseline-kv div {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+      padding-bottom: 6px;
+    }
+
+    .baseline-kv span:first-child {
+      color: var(--muted);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin: 12px 0;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.14);
+    }
+
+    .baseline-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    .baseline-table th,
+    .baseline-table td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .baseline-table th {
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .baseline-table td:nth-child(2),
+    .baseline-table td:nth-child(3) {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .baseline-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .baseline-table .sum-row td {
+      font-weight: 800;
+      background: rgba(96, 165, 250, 0.08);
+    }
+
+    .baseline-prose details {
+      margin: 10px 0;
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      border-radius: 12px;
+      padding: 0 14px 12px;
+      background: rgba(15, 23, 42, 0.35);
+    }
+
+    body.light .baseline-prose details {
+      background: rgba(248, 250, 252, 0.9);
+    }
+
+    .baseline-prose summary {
+      cursor: pointer;
+      padding: 12px 0;
+      font-weight: 720;
+      list-style: none;
+    }
+
+    .baseline-prose summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .baseline-prose ul.sources {
+      margin: 8px 0 0;
+      padding-left: 1.1rem;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    .baseline-prose ul.sources a {
+      color: var(--blue);
+    }
+
+    .baseline-prose .layer-detail {
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin: 0 0 8px;
+    }
+
+    blockquote.baseline-pull {
+      margin: 14px 0;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.22);
+      font-style: normal;
+      color: var(--text);
+    }
+
+    body.light blockquote.baseline-pull {
+      background: rgba(254, 243, 199, 0.35);
+    }
+
     @media (max-width: 1050px) {
       .app {
         grid-template-columns: 1fr;
@@ -617,6 +784,124 @@
   </header>
 
   <main class="app">
+    <section class="card baseline-banner" id="current-baseline">
+      <div class="card-header">
+        <div>
+          <div class="card-title">May 3, 2026 — current-condition baseline</div>
+          <div class="card-note">Not a final 2028 forecast. If today’s political and material conditions persisted into a presidential-election environment, what would the model say?</div>
+        </div>
+      </div>
+      <div class="content baseline-prose">
+        <p class="baseline-lead">
+          Below is the model applied to <strong>conditions as they exist on May 3, 2026</strong>.
+          Use preset <strong>“Current 2026 baseline”</strong> in Election Setup to load these sliders. Revise after midterms, inflation/oil news, Iran developments, and once Democrats have a nominee.
+        </p>
+
+        <div class="baseline-callout">
+          <strong>Baseline assumption.</strong> White House party: Republican Party. Incumbent president: Donald Trump.
+          Next presidential-cycle risk being modeled: <strong>Republican incumbent-party vulnerability</strong>.
+        </div>
+
+        <h4>Model read (summary)</h4>
+        <div class="baseline-kv">
+          <div><span>As-of date</span><span>2026-05-03</span></div>
+          <div><span>Incumbent stress (this site, capped sliders)</span><span><strong>53</strong> / 100 → Challenger favored band</span></div>
+          <div><span>Narrative “paper” stress (uncapped reads)</span><span>~56–58 (see layer notes)</span></div>
+          <div><span>Confidence</span><span>Medium-low — election far away; 2026 midterms not yet held</span></div>
+        </div>
+        <p class="layer-detail">
+          Main driver: formal economy is not collapsing, but lived material stress, inflation memory, housing stress, Iran-war cost concerns, weak approval, youth disillusionment, and legitimacy / democratic-risk layers are already accumulating.
+        </p>
+
+        <h3>Scorecard (site sliders)</h3>
+        <p class="layer-detail">Totals match the <strong>Current 2026 baseline</strong> preset. Some narrative rows above used analytic scores before slider caps (e.g. elite panic max 1).</p>
+        <div class="table-wrap">
+          <table class="baseline-table">
+            <thead>
+              <tr>
+                <th>Layer</th>
+                <th>Score</th>
+                <th>Max</th>
+                <th>Read</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Institutional stress</td><td>5</td><td>20</td><td>Early weakness; scandal/elite anxiety</td></tr>
+              <tr><td>Formal economic stress</td><td>9</td><td>20</td><td>Mixed; inflation re-acceleration</td></tr>
+              <tr><td>Lived material stress</td><td>17</td><td>20</td><td>Very high</td></tr>
+              <tr><td>Legitimacy / moral injury</td><td>13</td><td>20</td><td>High</td></tr>
+              <tr><td>Foreign / military stress</td><td>7</td><td>10</td><td>Iran war / oil-cost drag</td></tr>
+              <tr><td>Candidate affect / coalition fit</td><td>7</td><td>10</td><td>Weak outside GOP base</td></tr>
+              <tr><td>Opposition threat offset</td><td>5</td><td>25</td><td>Low — no Democratic nominee yet</td></tr>
+              <tr class="sum-row"><td>Incumbent stress total</td><td>53</td><td>100</td><td>Challenger favored if persisted</td></tr>
+              <tr><td>Electoral College conversion</td><td>8</td><td>30</td><td>GOP some structural map advantage</td></tr>
+              <tr><td>Democratic conversion risk</td><td>16</td><td>30</td><td>High — polarization &amp; precedent</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <blockquote class="baseline-pull">
+          As of May 2026, the model does not say Democrats are guaranteed to win. It says the Republican White House party is already in the danger zone: formal economy only okay while lived economy, cost-of-living politics, foreign-policy stress, and legitimacy conditions are bad.
+        </blockquote>
+
+        <h3>Layer notes (revise as news changes)</h3>
+
+        <details open>
+          <summary>A. Institutional — 5 / 20 on site</summary>
+          <p class="layer-detail">Midterms not scored; open seat 0; nomination tension 1; third party 0; scandal 3 (governance/Iran/Epstein/norms cluster); elite panic <strong>capped at 1</strong> (analytic read higher). WaPo–ABC–Ipsos: ~37% approve / 62% disapprove; generic ballot favors Democrats.</p>
+        </details>
+        <details>
+          <summary>B. Formal economy — 9 / 20</summary>
+          <p class="layer-detail">BEA: real GDP +2.0% annualized Q1 2026. BLS: CPI +3.3% YoY March 2026; unemployment ~4.3–4.4%. Recession 1, misery 3, GDP weak 1, unemployment 1, inflation shock <strong>3</strong> (max on slider).</p>
+        </details>
+        <details>
+          <summary>C. Lived material — 17 / 20</summary>
+          <p class="layer-detail">Michigan sentiment weak; mortgage ~6.3%, sales sluggish; rent burden; household debt ~$18.8T (NY Fed). worseOff 4, housing 4, food 2, debt 3, blockedLife 3, gaslighting 1.</p>
+        </details>
+        <details>
+          <summary>D. Legitimacy / moral injury — 13 / 20</summary>
+          <p class="layer-detail">Iran war, detention/protest/campus controversies, donor/elite narratives. moralRupture 3, warSplit 3, repression 3, baseDemobilization 1, donorCapture 2, narrativeBreak <strong>1</strong> (max).</p>
+        </details>
+        <details>
+          <summary>E. Foreign / military — 7 / 10</summary>
+          <p class="layer-detail">majorFailure 3, warFatigue 2, foreignHypocrisy <strong>2</strong> (max). Iran conflict clouds growth and inflation outlook.</p>
+        </details>
+        <details>
+          <summary>F. Candidate affect — 7 / 10</summary>
+          <p class="layer-detail">weakCandidate 2, cantSpeakPain 3, coalitionAlienation 2. Cost-of-living approval extremely weak in polls; youth souring in reporting.</p>
+        </details>
+        <details>
+          <summary>G. Opposition offset — 5 / 25</summary>
+          <p class="layer-detail">All offset factors at 1 — no nominee to anchor fear/unpopularity yet. Could swing sharply after nomination.</p>
+        </details>
+        <details>
+          <summary>H. Electoral conversion — 8 / 30</summary>
+          <p class="layer-detail">Map still favors GOP in places; regional realignment 3; PV–EC split risk 2. Does not by itself save either party.</p>
+        </details>
+        <details>
+          <summary>I. Democratic conversion risk — 16 / 30</summary>
+          <p class="layer-detail">Close margins, ballot fights, partisan admin, courts, certification precedent, violence risk, structural mismatch — institutional-risk layer, not a prediction of fraud.</p>
+        </details>
+
+        <h3>Sources (verify links periodically)</h3>
+        <ul class="sources">
+          <li><a href="https://www.washingtonpost.com/politics/2026/05/03/trump-approval-ratings-poll/" rel="noopener noreferrer" target="_blank">Washington Post — Trump approval / generic ballot (May 2026)</a></li>
+          <li><a href="https://www.bea.gov/news/2026/gdp-advance-estimate-1st-quarter-2026" rel="noopener noreferrer" target="_blank">BEA — GDP advance Q1 2026</a></li>
+          <li><a href="https://www.bls.gov/news.release/cpi.nr0.htm" rel="noopener noreferrer" target="_blank">BLS — CPI summary</a></li>
+          <li><a href="https://www.bls.gov/opub/ted/2026/unemployment-rate-4-4-percent-in-february-2026.htm" rel="noopener noreferrer" target="_blank">BLS — Unemployment Feb 2026</a></li>
+          <li><a href="https://www.sca.isr.umich.edu/" rel="noopener noreferrer" target="_blank">Michigan Surveys of Consumers</a></li>
+          <li><a href="https://apnews.com/article/cde199ffc4cd787eb1de775ca0450f7e" rel="noopener noreferrer" target="_blank">AP — Mortgage rate ~6.3%</a></li>
+          <li><a href="https://www.jchs.harvard.edu/blog/six-takeaways-americas-rental-housing-2026" rel="noopener noreferrer" target="_blank">Harvard JCHS — Rental housing 2026</a></li>
+          <li><a href="https://www.newyorkfed.org/newsevents/news/research/2026/20260210" rel="noopener noreferrer" target="_blank">NY Fed — Household debt context</a></li>
+          <li><a href="https://www.uml.edu/news/press-releases/2026/2026-nat-poll-march.aspx" rel="noopener noreferrer" target="_blank">UMass Lowell — National poll</a></li>
+          <li><a href="https://wtop.com/national/2026/03/last-protester-in-immigration-detention-after-trumps-campus-crackdown-has-been-released/" rel="noopener noreferrer" target="_blank">WTOP — Campus / detention reporting</a></li>
+          <li><a href="https://apnews.com/article/2e09bd656cd8ad1f9999c3cb7aac75e1" rel="noopener noreferrer" target="_blank">AP — Economy / Iran uncertainty</a></li>
+          <li><a href="https://www.ap.org/news-highlights/spotlights/2026/trumps-approval-on-economy-falls-in-ap-norc-poll-showing-new-warning-signs-for-president/" rel="noopener noreferrer" target="_blank">AP — Economy approval / Iran</a></li>
+          <li><a href="https://www.theguardian.com/commentisfree/2026/may/03/young-americans-trump-elections" rel="noopener noreferrer" target="_blank">The Guardian — Young voters / Trump</a></li>
+        </ul>
+      </div>
+    </section>
+
     <section class="card">
       <div class="card-header">
         <div>
@@ -790,6 +1075,64 @@
         challengerCandidate: "Challenger Nominee",
         values: {},
         notes: "Use this blank scenario for a future race. Score the White House party's stress, then separately score Electoral College conversion and democratic conversion risk."
+      },
+      {
+        id: "current-2026-baseline",
+        title: "Current 2026 baseline: Republican incumbent stress",
+        meta: "May 3, 2026 — formal economy mixed; lived material stress high; Iran-war / inflation legitimacy stress rising.",
+        raceName: "Current 2026 Baseline for Next Presidential Cycle",
+        incumbentParty: "Republican Party",
+        incumbentCandidate: "Donald Trump",
+        challengerCandidate: "Democratic challenger (TBD)",
+        values: {
+          midtermLoss: 0,
+          openSeat: 0,
+          nominationRupture: 1,
+          thirdParty: 0,
+          scandal: 3,
+          elitePanic: 1,
+          recession: 1,
+          miseryIndex: 3,
+          gdpWeak: 1,
+          unemployment: 1,
+          inflationShock: 3,
+          worseOff: 4,
+          housing: 4,
+          food: 2,
+          debt: 3,
+          blockedLife: 3,
+          gaslighting: 1,
+          moralRupture: 3,
+          warSplit: 3,
+          repression: 3,
+          baseDemobilization: 1,
+          donorCapture: 2,
+          narrativeBreak: 1,
+          majorFailure: 3,
+          warFatigue: 2,
+          foreignHypocrisy: 2,
+          weakCandidate: 2,
+          cantSpeakPain: 3,
+          coalitionAlienation: 2,
+          challengerExtremist: 1,
+          challengerUnpopular: 1,
+          challengerBlamed: 1,
+          fearTurnout: 1,
+          challengerChaos: 1,
+          incumbentOverconcentration: 1,
+          challengerEfficiency: 2,
+          thirdPartyGeography: 0,
+          regionalRealignment: 3,
+          pvEcSplit: 2,
+          tinyMargins: 2,
+          ballotDisputes: 2,
+          partisanAdmin: 2,
+          courtRisk: 2,
+          certSabotage: 3,
+          violence: 3,
+          conversionMismatch: 2
+        },
+        notes: "Current-condition baseline only (May 3, 2026). Revise after 2026 midterms, inflation/oil path, Iran trajectory, Democratic nominee, and any open-seat succession question. Republicans vulnerable if these conditions persist: weak approval, poor cost-of-living approval, inflation re-acceleration, weak sentiment, housing/rent stress, household debt, youth disillusionment, Iran-war costs, civil-liberties / protest legitimacy stress."
       },
       {
         id: "2024",
@@ -1458,7 +1801,7 @@
         if (saved.analystNotes !== undefined) document.getElementById("analystNotes").value = saved.analystNotes;
         if (saved.presetId) document.getElementById("presetSelect").value = saved.presetId;
       } else {
-        loadPresetById("2024");
+        loadPresetById("current-2026-baseline");
       }
     }
 
