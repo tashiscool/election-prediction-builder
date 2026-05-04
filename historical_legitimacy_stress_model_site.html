@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Historical Legitimacy Stress Model</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel2: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --line: #374151;
+      --good: #22c55e;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+      --blue: #60a5fa;
+      --purple: #a78bfa;
+      --cyan: #22d3ee;
+      --white: #ffffff;
+      --black: #020617;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(96, 165, 250, 0.18), transparent 32rem),
+        radial-gradient(circle at top right, rgba(167, 139, 250, 0.16), transparent 32rem),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 34px 24px 18px;
+      max-width: 1380px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 4.3rem);
+      letter-spacing: -0.055em;
+      line-height: 0.95;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      max-width: 980px;
+      font-size: 1.05rem;
+      line-height: 1.55;
+    }
+
+    .app {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 18px 24px 50px;
+      display: grid;
+      grid-template-columns: minmax(360px, 0.95fr) minmax(520px, 1.35fr);
+      gap: 22px;
+    }
+
+    @media (max-width: 1050px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(31, 41, 55, 0.94), rgba(17, 24, 39, 0.96));
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .card-title {
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-note {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.35;
+    }
+
+    .content {
+      padding: 18px 20px 20px;
+    }
+
+    .controls-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 640px) {
+      .controls-top {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 7px;
+    }
+
+    input[type="text"], select, textarea {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.84);
+      border: 1px solid var(--line);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 11px 12px;
+      outline: none;
+      font-size: 0.96rem;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      border-color: rgba(96, 165, 250, 0.9);
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.17);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 14px 0 0;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-weight: 800;
+      cursor: pointer;
+      color: #07111f;
+      background: var(--blue);
+      transition: transform 0.12s ease, opacity 0.12s ease, background 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+
+    button.secondary {
+      background: rgba(148, 163, 184, 0.17);
+      color: var(--text);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
+
+    button.danger {
+      background: rgba(239, 68, 68, 0.18);
+      color: #fecaca;
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 820px) {
+      .score-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .metric {
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 800;
+    }
+
+    .metric-value {
+      font-size: 2rem;
+      font-weight: 900;
+      margin-top: 5px;
+      letter-spacing: -0.04em;
+    }
+
+    .metric-small {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 4px;
+      line-height: 1.3;
+    }
+
+    .result-banner {
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(15, 23, 42, 0.78);
+      margin-bottom: 16px;
+    }
+
+    .result-banner h2 {
+      margin: 0 0 8px;
+      font-size: clamp(1.55rem, 3vw, 2.6rem);
+      letter-spacing: -0.045em;
+    }
+
+    .result-banner p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .pill.good {
+      color: #dcfce7;
+      background: rgba(34, 197, 94, 0.18);
+      border: 1px solid rgba(34, 197, 94, 0.27);
+    }
+
+    .pill.warn {
+      color: #fef3c7;
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid rgba(245, 158, 11, 0.27);
+    }
+
+    .pill.bad {
+      color: #fee2e2;
+      background: rgba(239, 68, 68, 0.18);
+      border: 1px solid rgba(239, 68, 68, 0.27);
+    }
+
+    .section {
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      background: rgba(15, 23, 42, 0.44);
+      border-radius: 16px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .section-title {
+      padding: 13px 15px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .section-title strong {
+      letter-spacing: -0.02em;
+    }
+
+    .section-score {
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 0.88rem;
+      white-space: nowrap;
+    }
+
+    .factor {
+      padding: 13px 15px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.09);
+    }
+
+    .factor:last-child {
+      border-bottom: 0;
+    }
+
+    .factor-line {
+      display: grid;
+      grid-template-columns: 1fr 58px;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .factor-name {
+      font-weight: 720;
+      font-size: 0.94rem;
+    }
+
+    .factor-desc {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
+      margin-bottom: 9px;
+    }
+
+    .factor-value {
+      text-align: right;
+      font-weight: 900;
+      color: var(--cyan);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--blue);
+    }
+
+    .bar-wrap {
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      border-radius: 999px;
+      height: 14px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0;
+      border-radius: 999px;
+      transition: width 0.18s ease, background 0.18s ease;
+    }
+
+    .explain {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 820px) {
+      .explain {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .mini-card {
+      background: rgba(15, 23, 42, 0.63);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      border-radius: 16px;
+      padding: 15px;
+    }
+
+    .mini-card h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .mini-card p, .mini-card li {
+      color: var(--muted);
+      line-height: 1.48;
+      font-size: 0.91rem;
+    }
+
+    .mini-card ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    .scenario-list {
+      display: grid;
+      gap: 8px;
+      max-height: 370px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .scenario-button {
+      text-align: left;
+      background: rgba(15, 23, 42, 0.6);
+      color: var(--text);
+      border: 1px solid rgba(148, 163, 184, 0.17);
+      padding: 12px;
+      border-radius: 14px;
+    }
+
+    .scenario-button:hover {
+      background: rgba(30, 41, 59, 0.85);
+    }
+
+    .scenario-title {
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .scenario-meta {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .conversion-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 700px) {
+      .conversion-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.45;
+      margin-top: 12px;
+    }
+
+    .light body, body.light {
+      --bg: #f8fafc;
+      --panel: #ffffff;
+      --panel2: #f1f5f9;
+      --text: #0f172a;
+      --muted: #475569;
+      --line: #cbd5e1;
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+    }
+
+    body.light .card,
+    body.light .metric,
+    body.light .mini-card,
+    body.light .section,
+    body.light details.section-wrap,
+    body.light .result-banner,
+    body.light .scenario-button,
+    body.light input,
+    body.light select,
+    body.light textarea {
+      background: rgba(255, 255, 255, 0.86);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .load-banner {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 0 24px 16px;
+    }
+
+    .load-banner-inner {
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      color: var(--text);
+    }
+
+    body.light .load-banner-inner {
+      background: #fff7ed;
+      border-color: rgba(245, 158, 11, 0.5);
+    }
+
+    .load-banner-inner p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .load-banner-inner code {
+      font-size: 0.85rem;
+      background: rgba(15, 23, 42, 0.45);
+      padding: 2px 8px;
+      border-radius: 8px;
+    }
+
+    body.light .load-banner-inner code {
+      background: #f1f5f9;
+    }
+
+    .file-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .file-row input[type="file"] {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    details.section-wrap {
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      background: rgba(15, 23, 42, 0.44);
+      border-radius: 16px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    details.section-wrap > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 13px 15px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    details.section-wrap > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.section-wrap > summary::after {
+      content: "▸";
+      flex-shrink: 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+      transition: transform 0.15s ease;
+    }
+
+    details.section-wrap[open] > summary::after {
+      transform: rotate(90deg);
+    }
+
+    .section-head-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .section-head-text strong {
+      letter-spacing: -0.02em;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .section-description {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.35;
+      font-weight: 500;
+    }
+
+    .section-body-inner {
+      padding: 0 0 4px;
+    }
+
+    .factor-guidance {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(96, 165, 250, 0.15);
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    body.light .factor-guidance {
+      background: rgba(241, 245, 249, 0.9);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .factor-guidance .guidance-label {
+      font-weight: 800;
+      color: var(--cyan);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    .factor-guidance p {
+      margin: 0 0 8px;
+    }
+
+    .factor-guidance p:last-child {
+      margin-bottom: 0;
+    }
+
+    .boot-placeholder {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    #resultBanner[aria-busy="true"] {
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Historical Legitimacy Stress Model</h1>
+    <div class="subtitle">
+      A future-election forecasting tool that combines institutional stability, formal economic data, lived material stress, legitimacy/moral injury, foreign-policy stress, candidate affect, opposition threat, Electoral College conversion, and democratic conversion risk.
+    </div>
+  </header>
+
+  <div id="contextLoader" class="load-banner hidden" role="alert">
+    <div class="load-banner-inner">
+      <p>
+        <strong style="color: var(--text);">Model data not loaded.</strong>
+        Browsers block loading <code>context.json</code> when this file is opened directly from disk. Use one of the options below.
+      </p>
+      <p>
+        <strong>Option A:</strong> From this folder run <code>npm start</code> then open the URL shown (loads <code>context.json</code> automatically).
+      </p>
+      <p><strong>Option B:</strong> Choose your <code>context.json</code> file manually:</p>
+      <div class="file-row">
+        <input type="file" id="contextFile" accept=".json,application/json" aria-label="Choose context.json file" />
+      </div>
+    </div>
+  </div>
+
+  <main class="app">
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Election Setup</div>
+          <div class="card-note">Load a historical preset or create a future race from scratch.</div>
+        </div>
+        <button class="secondary" id="themeToggle" type="button">Light</button>
+      </div>
+      <div class="content">
+        <div class="controls-top">
+          <div>
+            <label for="raceName">Race name</label>
+            <input type="text" id="raceName" value="2028 Presidential Election" />
+          </div>
+          <div>
+            <label for="incumbentParty">White House party</label>
+            <input type="text" id="incumbentParty" value="Incumbent Party" />
+          </div>
+          <div>
+            <label for="incumbentCandidate">Incumbent-party candidate</label>
+            <input type="text" id="incumbentCandidate" value="Incumbent Nominee" />
+          </div>
+          <div>
+            <label for="challengerCandidate">Challenger</label>
+            <input type="text" id="challengerCandidate" value="Challenger Nominee" />
+          </div>
+        </div>
+
+        <label for="presetSelect">Historical / scenario preset</label>
+        <select id="presetSelect"></select>
+        <div class="button-row">
+          <button type="button" id="loadPreset">Load preset</button>
+          <button type="button" class="secondary" id="resetNeutral">Reset neutral</button>
+          <button type="button" class="secondary" id="copySummary">Copy summary</button>
+          <button type="button" class="danger" id="clearNotes">Clear notes</button>
+        </div>
+
+        <div class="footer-note">
+          Scoring rule: each stress factor adds danger to the White House party. Opposition threat subtracts stress because a scary or unacceptable challenger can force voters back to the incumbent party.
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Prediction Output</div>
+          <div class="card-note">The model separates voter preference, Electoral College conversion, and democratic conversion risk.</div>
+        </div>
+      </div>
+      <div class="content">
+        <div id="resultBanner" class="result-banner">
+          <div id="resultPill" class="pill warn">Calculating</div>
+          <h2 id="mainPrediction">Competitive / unstable</h2>
+          <p id="predictionExplanation">Adjust the model inputs to generate a prediction.</p>
+          <div class="bar-wrap"><div class="bar" id="stressBar"></div></div>
+        </div>
+
+        <div class="score-grid">
+          <div class="metric">
+            <div class="metric-label">Incumbent Stress</div>
+            <div class="metric-value" id="stressScore">0</div>
+            <div class="metric-small">0–34 safe, 35–49 unstable, 50–64 challenger favored, 65+ collapse.</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Electoral Conversion</div>
+            <div class="metric-value" id="electoralScore">0</div>
+            <div class="metric-small">Positive favors challenger conversion; negative favors incumbent conversion.</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Democratic Risk</div>
+            <div class="metric-value" id="conversionRiskScore">0</div>
+            <div class="metric-small">Risk that courts, suppression, count fights, certification sabotage, or violence distort voter intent.</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Confidence</div>
+            <div class="metric-value" id="confidenceScore">0%</div>
+            <div class="metric-small">Based on distance from thresholds and conversion-risk instability.</div>
+          </div>
+        </div>
+
+        <div class="conversion-grid">
+          <div class="mini-card">
+            <h3>Popular Mandate</h3>
+            <p id="popularMandateText">Not calculated yet.</p>
+          </div>
+          <div class="mini-card">
+            <h3>Converted Outcome</h3>
+            <p id="convertedOutcomeText">Not calculated yet.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Model Inputs</div>
+          <div class="card-note">Sliders follow <code>context.json</code>: each score shows the nearest rubric line and historical anchors for that level.</div>
+        </div>
+      </div>
+      <div class="content" id="factorContainer">
+        <div class="boot-placeholder" id="bootPlaceholder">Loading model from <code>context.json</code>…</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Presets, Notes & Explanation</div>
+          <div class="card-note">Use historical presets to sanity-check future scoring.</div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="scenario-list" id="scenarioList"></div>
+
+        <div class="explain">
+          <div class="mini-card">
+            <h3>How to read the result</h3>
+            <ul>
+              <li><strong>Incumbent stress</strong> predicts whether the White House party is politically vulnerable.</li>
+              <li><strong>Electoral conversion</strong> models geography: popular support can be inefficiently distributed.</li>
+              <li><strong>Democratic conversion risk</strong> models breakdowns: recount fights, ballot rejection, court intervention, suppression, fake electors, certification sabotage, or violence.</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h3>Why this differs from 13 Keys</h3>
+            <p>Lichtman gives one point per key that turns against the incumbent party. This model keeps that incumbent-party logic but adds lived material stress, legitimacy/moral injury, conversion geography, and democratic machinery risk.</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 14px;">
+          <label for="analystNotes">Analyst notes</label>
+          <textarea id="analystNotes" placeholder="Example: formal economy is good, but lived housing/grocery stress is severe; Gaza/protest repression creates coalition moral injury; challenger risk offsets some but not all stress."></textarea>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "hlsm-session-v2";
+    const CONTEXT_FETCH_PATH = "context.json";
+
+    const SECTION_META = [
+      { jsonKey: "institutionalStress", id: "institutional", title: "A. Institutional Stress", isOffset: false },
+      { jsonKey: "formalEconomicStress", id: "formalEconomy", title: "B. Formal Economic Stress", isOffset: false },
+      { jsonKey: "livedMaterialStress", id: "livedMaterial", title: "C. Lived Material Stress", isOffset: false },
+      { jsonKey: "legitimacyMoralInjuryStress", id: "legitimacy", title: "D. Legitimacy / Moral Injury Stress", isOffset: false },
+      { jsonKey: "foreignMilitaryStress", id: "foreignMilitary", title: "E. Foreign / Military Stress", isOffset: false },
+      { jsonKey: "candidateAffectCoalitionFit", id: "candidateAffect", title: "F. Candidate Affect / Coalition Fit", isOffset: false },
+      { jsonKey: "oppositionThreatOffset", id: "oppositionOffset", title: "G. Opposition Threat Offset", isOffset: true },
+      { jsonKey: "electoralCollegeConversion", id: "electoralConversion", title: "H. Electoral College Conversion", isOffset: false },
+      { jsonKey: "democraticConversionRisk", id: "democraticRisk", title: "I. Democratic Conversion Risk", isOffset: false }
+    ];
+
+    let sections = [];
+    const factorValues = {};
+    let saveTimer = null;
+
+    const presets = [
+      {
+        id: "neutral",
+        title: "Neutral future race",
+        meta: "Blank baseline for a future election.",
+        raceName: "Future Presidential Election",
+        incumbentParty: "Incumbent Party",
+        incumbentCandidate: "Incumbent Nominee",
+        challengerCandidate: "Challenger Nominee",
+        values: {},
+        notes: "Use this blank scenario for a future race. Score the White House party's stress, then separately score Electoral College conversion and democratic conversion risk."
+      },
+      {
+        id: "2024",
+        title: "2024: Democrats lose",
+        meta: "Formal economy okay; lived material and legitimacy stress high.",
+        raceName: "2024 Presidential Election",
+        incumbentParty: "Democratic Party",
+        incumbentCandidate: "Kamala Harris",
+        challengerCandidate: "Donald Trump",
+        values: {
+          midtermLoss: 3, openSeat: 4, nominationRupture: 2, thirdParty: 1, scandal: 0, elitePanic: 1,
+          recession: 0, miseryIndex: 1, gdpWeak: 0, unemployment: 1, inflationShock: 4,
+          worseOff: 5, housing: 4, food: 3, debt: 3, blockedLife: 2, gaslighting: 2,
+          moralRupture: 5, warSplit: 4, repression: 3, baseDemobilization: 2, donorCapture: 2, narrativeBreak: 1,
+          majorFailure: 3, warFatigue: 2, foreignHypocrisy: 2,
+          weakCandidate: 3, cantSpeakPain: 3, coalitionAlienation: 2,
+          challengerExtremist: 5, challengerUnpopular: 3, challengerBlamed: 0, fearTurnout: 3, challengerChaos: 1,
+          incumbentOverconcentration: 3, challengerEfficiency: 6, thirdPartyGeography: 1, regionalRealignment: 3, pvEcSplit: 1,
+          tinyMargins: 1, ballotDisputes: 1, partisanAdmin: 1, courtRisk: 1, certSabotage: 2, violence: 2, conversionMismatch: 1
+        },
+        notes: "Model logic: macro indicators did not scream collapse, but lived material stress, Gaza/protest legitimacy damage, and candidate-affect weakness pushed incumbent stress into challenger-favored territory."
+      },
+      {
+        id: "2020",
+        title: "2020: Republicans lose",
+        meta: "COVID, recession shock, unrest, legitimacy collapse.",
+        raceName: "2020 Presidential Election",
+        incumbentParty: "Republican Party",
+        incumbentCandidate: "Donald Trump",
+        challengerCandidate: "Joe Biden",
+        values: {
+          midtermLoss: 3, openSeat: 0, nominationRupture: 0, thirdParty: 0, scandal: 3, elitePanic: 1,
+          recession: 6, miseryIndex: 4, gdpWeak: 4, unemployment: 3, inflationShock: 1,
+          worseOff: 5, housing: 2, food: 2, debt: 3, blockedLife: 3, gaslighting: 3,
+          moralRupture: 5, warSplit: 1, repression: 4, baseDemobilization: 2, donorCapture: 2, narrativeBreak: 3,
+          majorFailure: 2, warFatigue: 1, foreignHypocrisy: 1,
+          weakCandidate: 4, cantSpeakPain: 2, coalitionAlienation: 2,
+          challengerExtremist: 1, challengerUnpopular: 2, challengerBlamed: 4, fearTurnout: 2, challengerChaos: 1,
+          incumbentOverconcentration: 2, challengerEfficiency: 4, thirdPartyGeography: 0, regionalRealignment: 1, pvEcSplit: 2,
+          tinyMargins: 3, ballotDisputes: 2, partisanAdmin: 2, courtRisk: 2, certSabotage: 5, violence: 4, conversionMismatch: 2
+        },
+        notes: "Model logic: incumbent stress severe enough to beat even strong negative partisanship. Democratic conversion risk was high after the vote but failed to overturn the converted outcome."
+      },
+      {
+        id: "2016",
+        title: "2016: Democrats lose Electoral College",
+        meta: "Formal economy okay; legitimacy and geographic conversion fail.",
+        raceName: "2016 Presidential Election",
+        incumbentParty: "Democratic Party",
+        incumbentCandidate: "Hillary Clinton",
+        challengerCandidate: "Donald Trump",
+        values: {
+          midtermLoss: 3, openSeat: 4, nominationRupture: 3, thirdParty: 2, scandal: 1, elitePanic: 0,
+          recession: 0, miseryIndex: 1, gdpWeak: 2, unemployment: 1, inflationShock: 1,
+          worseOff: 3, housing: 2, food: 1, debt: 3, blockedLife: 3, gaslighting: 3,
+          moralRupture: 3, warSplit: 1, repression: 1, baseDemobilization: 3, donorCapture: 3, narrativeBreak: 3,
+          majorFailure: 1, warFatigue: 1, foreignHypocrisy: 1,
+          weakCandidate: 4, cantSpeakPain: 3, coalitionAlienation: 2,
+          challengerExtremist: 4, challengerUnpopular: 4, challengerBlamed: 0, fearTurnout: 2, challengerChaos: 0,
+          incumbentOverconcentration: 7, challengerEfficiency: 8, thirdPartyGeography: 3, regionalRealignment: 5, pvEcSplit: 4,
+          tinyMargins: 3, ballotDisputes: 1, partisanAdmin: 1, courtRisk: 1, certSabotage: 0, violence: 1, conversionMismatch: 3
+        },
+        notes: "Model logic: popular mandate was close and Clinton won the national vote, but material/legitimacy stress plus inefficient Electoral College geography made the converted outcome favor Trump."
+      },
+      {
+        id: "2012",
+        title: "2012: Democrats win",
+        meta: "Slow recovery but Obama coalition legitimacy survives.",
+        raceName: "2012 Presidential Election",
+        incumbentParty: "Democratic Party",
+        incumbentCandidate: "Barack Obama",
+        challengerCandidate: "Mitt Romney",
+        values: {
+          midtermLoss: 3, openSeat: 0, nominationRupture: 0, thirdParty: 0, scandal: 0, elitePanic: 0,
+          recession: 0, miseryIndex: 2, gdpWeak: 3, unemployment: 3, inflationShock: 1,
+          worseOff: 2, housing: 2, food: 1, debt: 2, blockedLife: 2, gaslighting: 1,
+          moralRupture: 1, warSplit: 1, repression: 1, baseDemobilization: 1, donorCapture: 1, narrativeBreak: 1,
+          majorFailure: 1, warFatigue: 1, foreignHypocrisy: 1,
+          weakCandidate: 1, cantSpeakPain: 1, coalitionAlienation: 0,
+          challengerExtremist: 1, challengerUnpopular: 2, challengerBlamed: 3, fearTurnout: 1, challengerChaos: 1,
+          incumbentOverconcentration: 1, challengerEfficiency: 1, thirdPartyGeography: 0, regionalRealignment: 0, pvEcSplit: 1,
+          tinyMargins: 1, ballotDisputes: 1, partisanAdmin: 1, courtRisk: 0, certSabotage: 0, violence: 0, conversionMismatch: 1
+        },
+        notes: "Model logic: recovery was slow, but Obama retained enough legitimacy and Romney did not become an anti-system vessel."
+      },
+      {
+        id: "2008",
+        title: "2008: Republicans collapse",
+        meta: "Financial crisis, Iraq fatigue, Bush legitimacy collapse.",
+        raceName: "2008 Presidential Election",
+        incumbentParty: "Republican Party",
+        incumbentCandidate: "John McCain",
+        challengerCandidate: "Barack Obama",
+        values: {
+          midtermLoss: 3, openSeat: 4, nominationRupture: 1, thirdParty: 0, scandal: 2, elitePanic: 1,
+          recession: 6, miseryIndex: 4, gdpWeak: 4, unemployment: 3, inflationShock: 3,
+          worseOff: 5, housing: 4, food: 2, debt: 4, blockedLife: 3, gaslighting: 2,
+          moralRupture: 4, warSplit: 3, repression: 1, baseDemobilization: 3, donorCapture: 3, narrativeBreak: 4,
+          majorFailure: 4, warFatigue: 3, foreignHypocrisy: 1,
+          weakCandidate: 3, cantSpeakPain: 2, coalitionAlienation: 2,
+          challengerExtremist: 0, challengerUnpopular: 1, challengerBlamed: 1, fearTurnout: 1, challengerChaos: 0,
+          incumbentOverconcentration: 2, challengerEfficiency: 4, thirdPartyGeography: 0, regionalRealignment: 4, pvEcSplit: 1,
+          tinyMargins: 0, ballotDisputes: 1, partisanAdmin: 1, courtRisk: 0, certSabotage: 0, violence: 0, conversionMismatch: 0
+        },
+        notes: "Model logic: formal economy, lived economy, war, legitimacy, and candidate-affect stress all aligned against the White House party."
+      },
+      {
+        id: "2004",
+        title: "2004: Republicans survive",
+        meta: "Iraq damage, but security frame and challenger weakness offset stress.",
+        raceName: "2004 Presidential Election",
+        incumbentParty: "Republican Party",
+        incumbentCandidate: "George W. Bush",
+        challengerCandidate: "John Kerry",
+        values: {
+          midtermLoss: 0, openSeat: 0, nominationRupture: 0, thirdParty: 0, scandal: 1, elitePanic: 0,
+          recession: 0, miseryIndex: 2, gdpWeak: 2, unemployment: 2, inflationShock: 1,
+          worseOff: 1, housing: 1, food: 1, debt: 2, blockedLife: 1, gaslighting: 1,
+          moralRupture: 3, warSplit: 3, repression: 1, baseDemobilization: 1, donorCapture: 1, narrativeBreak: 1,
+          majorFailure: 3, warFatigue: 3, foreignHypocrisy: 2,
+          weakCandidate: 1, cantSpeakPain: 1, coalitionAlienation: 1,
+          challengerExtremist: 2, challengerUnpopular: 2, challengerBlamed: 3, fearTurnout: 4, challengerChaos: 1,
+          incumbentOverconcentration: 1, challengerEfficiency: 1, thirdPartyGeography: 0, regionalRealignment: 0, pvEcSplit: 1,
+          tinyMargins: 2, ballotDisputes: 1, partisanAdmin: 1, courtRisk: 1, certSabotage: 0, violence: 0, conversionMismatch: 1
+        },
+        notes: "Model logic: Iraq raised legitimacy and foreign-policy stress, but 9/11 security framing and weak opposition-threat offset kept incumbent stress below defeat level."
+      },
+      {
+        id: "2000",
+        title: "2000: Gore mandate, Bush converted outcome",
+        meta: "Low incumbent stress but catastrophic conversion risk in Florida.",
+        raceName: "2000 Presidential Election",
+        incumbentParty: "Democratic Party",
+        incumbentCandidate: "Al Gore",
+        challengerCandidate: "George W. Bush",
+        values: {
+          midtermLoss: 1, openSeat: 4, nominationRupture: 0, thirdParty: 2, scandal: 2, elitePanic: 1,
+          recession: 0, miseryIndex: 0, gdpWeak: 1, unemployment: 0, inflationShock: 1,
+          worseOff: 0, housing: 1, food: 0, debt: 1, blockedLife: 1, gaslighting: 1,
+          moralRupture: 1, warSplit: 0, repression: 0, baseDemobilization: 2, donorCapture: 2, narrativeBreak: 1,
+          majorFailure: 0, warFatigue: 0, foreignHypocrisy: 1,
+          weakCandidate: 3, cantSpeakPain: 2, coalitionAlienation: 2,
+          challengerExtremist: 0, challengerUnpopular: 1, challengerBlamed: 1, fearTurnout: 1, challengerChaos: 1,
+          incumbentOverconcentration: 4, challengerEfficiency: 5, thirdPartyGeography: 4, regionalRealignment: 1, pvEcSplit: 4,
+          tinyMargins: 5, ballotDisputes: 5, partisanAdmin: 4, courtRisk: 4, certSabotage: 0, violence: 0, conversionMismatch: 3
+        },
+        notes: "Model logic: Gore was favored on popular mandate, but Electoral College geography plus Florida recount/litigation/court risk converted the institutional outcome to Bush."
+      },
+      {
+        id: "1992",
+        title: "1992: Republicans lose",
+        meta: "Recession memory, Perot, out-of-touch affect, anti-system stress.",
+        raceName: "1992 Presidential Election",
+        incumbentParty: "Republican Party",
+        incumbentCandidate: "George H. W. Bush",
+        challengerCandidate: "Bill Clinton",
+        values: {
+          midtermLoss: 2, openSeat: 0, nominationRupture: 2, thirdParty: 3, scandal: 1, elitePanic: 1,
+          recession: 3, miseryIndex: 3, gdpWeak: 3, unemployment: 3, inflationShock: 1,
+          worseOff: 4, housing: 2, food: 2, debt: 2, blockedLife: 2, gaslighting: 2,
+          moralRupture: 2, warSplit: 0, repression: 0, baseDemobilization: 2, donorCapture: 2, narrativeBreak: 2,
+          majorFailure: 0, warFatigue: 1, foreignHypocrisy: 1,
+          weakCandidate: 3, cantSpeakPain: 3, coalitionAlienation: 2,
+          challengerExtremist: 0, challengerUnpopular: 1, challengerBlamed: 1, fearTurnout: 1, challengerChaos: 1,
+          incumbentOverconcentration: 1, challengerEfficiency: 3, thirdPartyGeography: 4, regionalRealignment: 2, pvEcSplit: 0,
+          tinyMargins: 0, ballotDisputes: 0, partisanAdmin: 0, courtRisk: 0, certSabotage: 0, violence: 0, conversionMismatch: 0
+        },
+        notes: "Model logic: formal economy and lived economy moved against Bush, while Perot expressed anti-system pressure and Clinton embodied generational change."
+      },
+      {
+        id: "1980",
+        title: "1980: Democrats collapse",
+        meta: "Inflation, unemployment, energy, Iran hostage, malaise.",
+        raceName: "1980 Presidential Election",
+        incumbentParty: "Democratic Party",
+        incumbentCandidate: "Jimmy Carter",
+        challengerCandidate: "Ronald Reagan",
+        values: {
+          midtermLoss: 2, openSeat: 0, nominationRupture: 5, thirdParty: 2, scandal: 1, elitePanic: 1,
+          recession: 6, miseryIndex: 4, gdpWeak: 3, unemployment: 3, inflationShock: 3,
+          worseOff: 5, housing: 2, food: 3, debt: 2, blockedLife: 3, gaslighting: 3,
+          moralRupture: 4, warSplit: 1, repression: 1, baseDemobilization: 3, donorCapture: 2, narrativeBreak: 4,
+          majorFailure: 5, warFatigue: 2, foreignHypocrisy: 2,
+          weakCandidate: 4, cantSpeakPain: 2, coalitionAlienation: 2,
+          challengerExtremist: 2, challengerUnpopular: 1, challengerBlamed: 0, fearTurnout: 1, challengerChaos: 1,
+          incumbentOverconcentration: 0, challengerEfficiency: 3, thirdPartyGeography: 1, regionalRealignment: 4, pvEcSplit: 0,
+          tinyMargins: 0, ballotDisputes: 0, partisanAdmin: 0, courtRisk: 0, certSabotage: 0, violence: 0, conversionMismatch: 0
+        },
+        notes: "Model logic: nearly every layer turned against the White House party."
+      },
+      {
+        id: "1968",
+        title: "1968: Democrats lose",
+        meta: "Vietnam, assassinations, riots, party rupture, Wallace.",
+        raceName: "1968 Presidential Election",
+        incumbentParty: "Democratic Party",
+        incumbentCandidate: "Hubert Humphrey",
+        challengerCandidate: "Richard Nixon",
+        values: {
+          midtermLoss: 2, openSeat: 4, nominationRupture: 5, thirdParty: 3, scandal: 1, elitePanic: 1,
+          recession: 0, miseryIndex: 2, gdpWeak: 1, unemployment: 1, inflationShock: 1,
+          worseOff: 2, housing: 1, food: 1, debt: 1, blockedLife: 2, gaslighting: 1,
+          moralRupture: 5, warSplit: 4, repression: 4, baseDemobilization: 3, donorCapture: 1, narrativeBreak: 3,
+          majorFailure: 5, warFatigue: 3, foreignHypocrisy: 2,
+          weakCandidate: 3, cantSpeakPain: 2, coalitionAlienation: 3,
+          challengerExtremist: 1, challengerUnpopular: 2, challengerBlamed: 0, fearTurnout: 1, challengerChaos: 1,
+          incumbentOverconcentration: 1, challengerEfficiency: 2, thirdPartyGeography: 5, regionalRealignment: 4, pvEcSplit: 1,
+          tinyMargins: 1, ballotDisputes: 0, partisanAdmin: 0, courtRisk: 0, certSabotage: 0, violence: 2, conversionMismatch: 1
+        },
+        notes: "Model logic: legitimacy stress became visible institutional rupture, unlike 2024's more contained coalition-specific legitimacy rupture."
+      }
+    ];
+
+    function buildSectionsFromContext(model) {
+      const srcSections = model.sections;
+      if (!srcSections) throw new Error("Invalid context.json: missing sections");
+      const out = [];
+      for (const meta of SECTION_META) {
+        const src = srcSections[meta.jsonKey];
+        if (!src || !src.factors) {
+          console.warn("Missing section", meta.jsonKey);
+          continue;
+        }
+        const factors = [];
+        for (const [factorId, spec] of Object.entries(src.factors)) {
+          factors.push({
+            id: factorId,
+            name: spec.label,
+            max: spec.max,
+            guidance: spec.guidance || {},
+            historicalAnchors: spec.historicalAnchors || {}
+          });
+        }
+        out.push({
+          id: meta.id,
+          jsonKey: meta.jsonKey,
+          title: meta.title,
+          description: src.description || "",
+          max: src.max,
+          isOffset: meta.isOffset,
+          factors
+        });
+      }
+      return out;
+    }
+
+    function initializeValues() {
+      sections.forEach(section => {
+        section.factors.forEach(factor => {
+          if (factorValues[factor.id] === undefined) {
+            factorValues[factor.id] = 0;
+          }
+        });
+      });
+    }
+
+    function clampPresetFactor(id, v) {
+      const f = getFactorById(id);
+      if (!f) return 0;
+      return clamp(Number(v) || 0, 0, f.max);
+    }
+
+    function pickNearestMapEntry(map, n) {
+      if (!map || typeof map !== "object") return null;
+      for (let v = n; v >= 0; v--) {
+        const k = String(v);
+        if (Object.prototype.hasOwnProperty.call(map, k)) return map[k];
+      }
+      return null;
+    }
+
+    function formatAnchors(val) {
+      if (!Array.isArray(val) || !val.length) return "";
+      return val.join(" · ");
+    }
+
+    function updateFactorGuidanceDisplay(factor) {
+      const el = document.getElementById(`guidance-${factor.id}`);
+      if (!el) return;
+      const n = factorValues[factor.id] || 0;
+      const g = pickNearestMapEntry(factor.guidance, n);
+      const a = pickNearestMapEntry(factor.historicalAnchors, n);
+      el.textContent = "";
+      const label = document.createElement("div");
+      label.className = "guidance-label";
+      label.textContent = `Score ${n} — rubric`;
+      el.appendChild(label);
+      const p1 = document.createElement("p");
+      p1.textContent = typeof g === "string" && g ? g : "No exact rubric line for this integer in context.json; values shown are the nearest lower defined step.";
+      el.appendChild(p1);
+      const anchorStr = formatAnchors(a);
+      if (anchorStr) {
+        const p2 = document.createElement("p");
+        const s = document.createElement("strong");
+        s.textContent = "Historical anchors: ";
+        p2.appendChild(s);
+        p2.appendChild(document.createTextNode(anchorStr));
+        el.appendChild(p2);
+      }
+    }
+
+    function getFactorById(id) {
+      for (const section of sections) {
+        const found = section.factors.find(f => f.id === id);
+        if (found) return found;
+      }
+      return null;
+    }
+
+    function renderPresetSelect() {
+      const select = document.getElementById("presetSelect");
+      select.innerHTML = "";
+      presets.forEach(preset => {
+        const option = document.createElement("option");
+        option.value = preset.id;
+        option.textContent = preset.title;
+        select.appendChild(option);
+      });
+    }
+
+    function renderScenarioList() {
+      const list = document.getElementById("scenarioList");
+      list.innerHTML = "";
+      presets.forEach(preset => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "scenario-button";
+        button.innerHTML = `<div class="scenario-title">${escapeHtml(preset.title)}</div><div class="scenario-meta">${escapeHtml(preset.meta)}</div>`;
+        button.addEventListener("click", () => loadPresetById(preset.id));
+        list.appendChild(button);
+      });
+    }
+
+    function renderFactors() {
+      const container = document.getElementById("factorContainer");
+      const placeholder = document.getElementById("bootPlaceholder");
+      if (placeholder) placeholder.remove();
+
+      container.innerHTML = "";
+
+      sections.forEach(section => {
+        const details = document.createElement("details");
+        details.className = "section-wrap";
+        details.open = true;
+        details.dataset.sectionId = section.id;
+
+        const summary = document.createElement("summary");
+        const head = document.createElement("div");
+        head.className = "section-head-text";
+        const descHtml = section.description
+          ? `<div class="section-description">${escapeHtml(section.description)}</div>`
+          : "";
+        head.innerHTML = `<strong>${escapeHtml(section.title)}</strong>${descHtml}`;
+        const scoreSpan = document.createElement("span");
+        scoreSpan.className = "section-score";
+        scoreSpan.id = `section-score-${section.id}`;
+        scoreSpan.textContent = `0 / ${section.max}`;
+        summary.appendChild(head);
+        summary.appendChild(scoreSpan);
+        details.appendChild(summary);
+
+        const body = document.createElement("div");
+        body.className = "section-body-inner";
+
+        section.factors.forEach(factor => {
+          const factorEl = document.createElement("div");
+          factorEl.className = "factor";
+          factorEl.innerHTML = `
+            <div class="factor-line">
+              <div class="factor-name">${escapeHtml(factor.name)}</div>
+              <div class="factor-value"><span id="value-${factor.id}">${factorValues[factor.id]}</span> / ${factor.max}</div>
+            </div>
+            <input type="range" min="0" max="${factor.max}" step="1" value="${factorValues[factor.id]}" id="input-${factor.id}" aria-valuemin="0" aria-valuemax="${factor.max}" aria-describedby="guidance-${factor.id}" />
+            <div class="factor-guidance" id="guidance-${factor.id}" role="region" aria-live="polite"></div>
+          `;
+          body.appendChild(factorEl);
+        });
+
+        details.appendChild(body);
+        container.appendChild(details);
+      });
+
+      sections.forEach(section => {
+        section.factors.forEach(factor => {
+          document.getElementById(`input-${factor.id}`).addEventListener("input", event => {
+            factorValues[factor.id] = Number(event.target.value);
+            scheduleSave();
+            updateAll();
+          });
+          updateFactorGuidanceDisplay(factor);
+        });
+      });
+    }
+
+    function calculateSectionScore(section) {
+      return section.factors.reduce((sum, factor) => sum + (factorValues[factor.id] || 0), 0);
+    }
+
+    function calculateScores() {
+      const sectionScores = {};
+      sections.forEach(section => {
+        sectionScores[section.id] = calculateSectionScore(section);
+      });
+
+      const rawStress =
+        sectionScores.institutional +
+        sectionScores.formalEconomy +
+        sectionScores.livedMaterial +
+        sectionScores.legitimacy +
+        sectionScores.foreignMilitary +
+        sectionScores.candidateAffect -
+        sectionScores.oppositionOffset;
+
+      const stress = clamp(rawStress, 0, 100);
+      const electoral = sectionScores.electoralConversion;
+      const democraticRisk = sectionScores.democraticRisk;
+      const effectiveStress = clamp(stress + Math.round(electoral * 0.35), 0, 100);
+
+      return { sectionScores, stress, electoral, democraticRisk, effectiveStress };
+    }
+
+    function classifyStress(stress) {
+      if (stress >= 65) {
+        return {
+          label: "Incumbent-party collapse likely",
+          css: "bad",
+          color: "var(--bad)",
+          summary: "The White House party faces severe accumulated stress. The challenger is strongly favored unless Electoral College conversion or opposition-threat dynamics rescue the incumbent."
+        };
+      }
+      if (stress >= 50) {
+        return {
+          label: "Challenger favored",
+          css: "bad",
+          color: "var(--bad)",
+          summary: "The White House party is in the danger zone. Material, legitimacy, institutional, or candidate-affect stress is strong enough to make the challenger favored."
+        };
+      }
+      if (stress >= 35) {
+        return {
+          label: "Competitive / unstable",
+          css: "warn",
+          color: "var(--warn)",
+          summary: "The White House party is vulnerable, but the race depends on conversion geography, opposition threat, turnout, and democratic machinery risk."
+        };
+      }
+      return {
+        label: "Incumbent party favored",
+        css: "good",
+        color: "var(--good)",
+        summary: "The White House party has manageable stress. The incumbent-party candidate is favored unless Electoral College conversion or democratic conversion problems intervene."
+      };
+    }
+
+    function classifyPopularMandate(stress) {
+      const incumbent = document.getElementById("incumbentCandidate").value.trim() || "Incumbent nominee";
+      const challenger = document.getElementById("challengerCandidate").value.trim() || "Challenger nominee";
+
+      if (stress >= 65) return `${challenger} is strongly favored on voter-pressure / popular-mandate logic because incumbent-party stress is severe.`;
+      if (stress >= 50) return `${challenger} is favored on voter-pressure logic, though the race may still depend on Electoral College geography and opposition-threat effects.`;
+      if (stress >= 35) return `Popular mandate is unstable. ${incumbent} may survive, but voter-pressure conditions are dangerous enough for ${challenger} to plausibly win.`;
+      return `${incumbent} is favored on voter-pressure / popular-mandate logic because incumbent-party stress is low.`;
+    }
+
+    function classifyConvertedOutcome(stress, electoral, democraticRisk) {
+      const incumbent = document.getElementById("incumbentCandidate").value.trim() || "Incumbent nominee";
+      const challenger = document.getElementById("challengerCandidate").value.trim() || "Challenger nominee";
+      const effective = clamp(stress + Math.round(electoral * 0.35), 0, 100);
+      let base;
+
+      if (effective >= 65) base = `${challenger} is strongly favored in the converted outcome.`;
+      else if (effective >= 50) base = `${challenger} is favored in the converted outcome.`;
+      else if (effective >= 35) base = `Converted outcome is competitive; geography could decide whether ${incumbent} or ${challenger} wins.`;
+      else base = `${incumbent} is favored in the converted outcome.`;
+
+      if (democraticRisk >= 22) {
+        return `${base} Democratic conversion risk is catastrophic: voter intent could be distorted by courts, disputed counts, certification fights, suppression, or violence.`;
+      }
+      if (democraticRisk >= 14) {
+        return `${base} Democratic conversion risk is high enough that the model should flag litigation, certification, ballot, and intimidation scenarios.`;
+      }
+      if (democraticRisk >= 7) {
+        return `${base} Democratic conversion risk is moderate but not central unless margins are extremely close.`;
+      }
+      return `${base} Democratic conversion risk is low under the current assumptions.`;
+    }
+
+    function calculateConfidence(stress, democraticRisk) {
+      const distances = [Math.abs(stress - 35), Math.abs(stress - 50), Math.abs(stress - 65)];
+      const minDistance = Math.min(...distances);
+      const base = clamp(48 + minDistance * 3, 45, 88);
+      const penalty = democraticRisk >= 22 ? 18 : democraticRisk >= 14 ? 10 : democraticRisk >= 7 ? 5 : 0;
+      return clamp(Math.round(base - penalty), 35, 90);
+    }
+
+    function updateAll() {
+      if (!sections.length) return;
+
+      const scores = calculateScores();
+      const classification = classifyStress(scores.stress);
+      const confidence = calculateConfidence(scores.stress, scores.democraticRisk);
+
+      sections.forEach(section => {
+        const sectionScore = scores.sectionScores[section.id];
+        const scoreEl = document.getElementById(`section-score-${section.id}`);
+        if (scoreEl) {
+          const prefix = section.isOffset ? "Offset " : "";
+          scoreEl.textContent = `${prefix}${sectionScore} / ${section.max}`;
+        }
+        section.factors.forEach(factor => {
+          const valueEl = document.getElementById(`value-${factor.id}`);
+          const inputEl = document.getElementById(`input-${factor.id}`);
+          if (valueEl) valueEl.textContent = factorValues[factor.id] || 0;
+          if (inputEl && Number(inputEl.value) !== Number(factorValues[factor.id])) {
+            inputEl.value = factorValues[factor.id] || 0;
+          }
+          updateFactorGuidanceDisplay(factor);
+        });
+      });
+
+      document.getElementById("stressScore").textContent = scores.stress;
+      document.getElementById("electoralScore").textContent = scores.electoral;
+      document.getElementById("conversionRiskScore").textContent = scores.democraticRisk;
+      document.getElementById("confidenceScore").textContent = `${confidence}%`;
+
+      const pill = document.getElementById("resultPill");
+      pill.className = `pill ${classification.css}`;
+      pill.textContent = classification.label;
+
+      document.getElementById("mainPrediction").textContent = classification.label;
+      document.getElementById("predictionExplanation").textContent = classification.summary;
+
+      const bar = document.getElementById("stressBar");
+      bar.style.width = `${scores.stress}%`;
+      bar.style.background = classification.color;
+
+      document.getElementById("popularMandateText").textContent = classifyPopularMandate(scores.stress);
+      document.getElementById("convertedOutcomeText").textContent = classifyConvertedOutcome(scores.stress, scores.electoral, scores.democraticRisk);
+
+      const rb = document.getElementById("resultBanner");
+      rb.setAttribute("aria-busy", "false");
+    }
+
+    function loadPresetById(id) {
+      const preset = presets.find(p => p.id === id);
+      if (!preset) return;
+
+      document.getElementById("presetSelect").value = preset.id;
+      document.getElementById("raceName").value = preset.raceName || "";
+      document.getElementById("incumbentParty").value = preset.incumbentParty || "";
+      document.getElementById("incumbentCandidate").value = preset.incumbentCandidate || "";
+      document.getElementById("challengerCandidate").value = preset.challengerCandidate || "";
+      document.getElementById("analystNotes").value = preset.notes || "";
+
+      Object.keys(factorValues).forEach(key => {
+        factorValues[key] = clampPresetFactor(key, preset.values[key] !== undefined ? preset.values[key] : 0);
+      });
+
+      scheduleSave();
+      updateAll();
+    }
+
+    function resetNeutral() {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (_) {}
+      loadPresetById("neutral");
+    }
+
+    function clearNotes() {
+      document.getElementById("analystNotes").value = "";
+      scheduleSave();
+    }
+
+    function scheduleSave() {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(saveState, 400);
+    }
+
+    function saveState() {
+      try {
+        const payload = {
+          factorValues: { ...factorValues },
+          raceName: document.getElementById("raceName").value,
+          incumbentParty: document.getElementById("incumbentParty").value,
+          incumbentCandidate: document.getElementById("incumbentCandidate").value,
+          challengerCandidate: document.getElementById("challengerCandidate").value,
+          analystNotes: document.getElementById("analystNotes").value,
+          presetId: document.getElementById("presetSelect").value
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      } catch (_) {}
+    }
+
+    function restoreStateOrDefault() {
+      let saved = null;
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) saved = JSON.parse(raw);
+      } catch (_) {
+        saved = null;
+      }
+
+      if (saved && saved.factorValues && typeof saved.factorValues === "object") {
+        Object.keys(factorValues).forEach(key => {
+          if (saved.factorValues[key] !== undefined) {
+            factorValues[key] = clampPresetFactor(key, saved.factorValues[key]);
+          }
+        });
+        if (saved.raceName !== undefined) document.getElementById("raceName").value = saved.raceName;
+        if (saved.incumbentParty !== undefined) document.getElementById("incumbentParty").value = saved.incumbentParty;
+        if (saved.incumbentCandidate !== undefined) document.getElementById("incumbentCandidate").value = saved.incumbentCandidate;
+        if (saved.challengerCandidate !== undefined) document.getElementById("challengerCandidate").value = saved.challengerCandidate;
+        if (saved.analystNotes !== undefined) document.getElementById("analystNotes").value = saved.analystNotes;
+        if (saved.presetId) document.getElementById("presetSelect").value = saved.presetId;
+      } else {
+        loadPresetById("2024");
+      }
+    }
+
+    async function copySummary() {
+      const scores = calculateScores();
+      const classification = classifyStress(scores.stress);
+      const raceName = document.getElementById("raceName").value.trim();
+      const incumbentParty = document.getElementById("incumbentParty").value.trim();
+      const incumbent = document.getElementById("incumbentCandidate").value.trim();
+      const challenger = document.getElementById("challengerCandidate").value.trim();
+      const notes = document.getElementById("analystNotes").value.trim();
+
+      const sectionLines = sections.map(section => {
+        const score = scores.sectionScores[section.id];
+        const label = section.isOffset ? `${section.title}: -${score}/${section.max}` : `${section.title}: ${score}/${section.max}`;
+        return label;
+      }).join("\n");
+
+      const summary = [
+        `Historical Legitimacy Stress Model Summary`,
+        `Race: ${raceName}`,
+        `White House party: ${incumbentParty}`,
+        `Incumbent-party candidate: ${incumbent}`,
+        `Challenger: ${challenger}`,
+        `Prediction: ${classification.label}`,
+        `Incumbent Stress Score: ${scores.stress}/100`,
+        `Electoral Conversion Score: ${scores.electoral}/30`,
+        `Democratic Conversion Risk: ${scores.democraticRisk}/30`,
+        ``,
+        sectionLines,
+        ``,
+        `Popular Mandate: ${classifyPopularMandate(scores.stress)}`,
+        `Converted Outcome: ${classifyConvertedOutcome(scores.stress, scores.electoral, scores.democraticRisk)}`,
+        notes ? `\nNotes: ${notes}` : ""
+      ].join("\n");
+
+      try {
+        await navigator.clipboard.writeText(summary);
+        const button = document.getElementById("copySummary");
+        const old = button.textContent;
+        button.textContent = "Copied";
+        setTimeout(() => { button.textContent = old; }, 900);
+      } catch (error) {
+        window.prompt("Copy summary:", summary);
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function attachListeners() {
+      document.getElementById("loadPreset").addEventListener("click", () => {
+        loadPresetById(document.getElementById("presetSelect").value);
+      });
+      document.getElementById("resetNeutral").addEventListener("click", resetNeutral);
+      document.getElementById("copySummary").addEventListener("click", copySummary);
+      document.getElementById("clearNotes").addEventListener("click", clearNotes);
+      document.getElementById("themeToggle").addEventListener("click", () => {
+        document.body.classList.toggle("light");
+        document.getElementById("themeToggle").textContent = document.body.classList.contains("light") ? "Dark" : "Light";
+      });
+
+      ["raceName", "incumbentParty", "incumbentCandidate", "challengerCandidate", "analystNotes"].forEach(id => {
+        document.getElementById(id).addEventListener("input", () => {
+          scheduleSave();
+          updateAll();
+        });
+      });
+    }
+
+    function showLoader(show) {
+      const el = document.getElementById("contextLoader");
+      if (show) el.classList.remove("hidden");
+      else el.classList.add("hidden");
+    }
+
+    function bootstrapModel(model) {
+      sections.length = 0;
+      sections.push(...buildSectionsFromContext(model));
+      Object.keys(factorValues).forEach(k => delete factorValues[k]);
+      initializeValues();
+      renderPresetSelect();
+      renderScenarioList();
+      renderFactors();
+      attachListeners();
+      restoreStateOrDefault();
+      updateAll();
+      document.getElementById("resultBanner").setAttribute("aria-busy", "false");
+    }
+
+    async function tryFetchContext() {
+      try {
+        const res = await fetch(CONTEXT_FETCH_PATH, { cache: "no-store" });
+        if (!res.ok) throw new Error(String(res.status));
+        return await res.json();
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function readContextFromFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            resolve(JSON.parse(String(reader.result)));
+          } catch (e) {
+            reject(e);
+          }
+        };
+        reader.onerror = () => reject(reader.error);
+        reader.readAsText(file, "UTF-8");
+      });
+    }
+
+    async function init() {
+      document.getElementById("resultBanner").setAttribute("aria-busy", "true");
+      let model = await tryFetchContext();
+      if (!model) {
+        showLoader(true);
+        const ph = document.getElementById("bootPlaceholder");
+        if (ph) {
+          ph.innerHTML = `Could not load <code>context.json</code> automatically. Use <strong>npm start</strong> or pick the file below.`;
+        }
+        document.getElementById("contextFile").addEventListener("change", async ev => {
+          const file = ev.target.files && ev.target.files[0];
+          if (!file) return;
+          try {
+            model = await readContextFromFile(file);
+            showLoader(false);
+            const ph2 = document.getElementById("bootPlaceholder");
+            if (ph2) ph2.remove();
+            bootstrapModel(model);
+          } catch (e) {
+            alert("Could not read JSON. Choose a valid context.json file.");
+          }
+        });
+        return;
+      }
+
+      const ph = document.getElementById("bootPlaceholder");
+      if (ph) ph.remove();
+      bootstrapModel(model);
+    }
+
+    init();
+  </script>
+</body>
+</html>

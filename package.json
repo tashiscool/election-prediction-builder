@@ -1,0 +1,7 @@
+{
+  "name": "election-prediction-builder",
+  "private": true,
+  "scripts": {
+    "start": "python3 -m http.server 3456"
+  }
+}
