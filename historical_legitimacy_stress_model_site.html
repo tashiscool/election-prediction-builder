@@ -997,7 +997,7 @@
 </head>
 <body>
   <header>
-    <div class="hero-kicker" title="48 graded subfactors (dials) across sections A–I; same rubric as the Election Insights React build.">2026 edition · Historical Legitimacy Stress Model · 48 dials</div>
+    <div class="hero-kicker" title="48 graded subfactors (dials) across sections A–I; same rubric as the Election Insights React build.">2028-cycle lens · snapshot May 3, 2026 · Historical Legitimacy Stress Model · 48 dials</div>
     <h1 title="Forty-eight sliders (0–5 each), section-weighted into headline stress, Electoral College conversion (H), and democratic machinery risk (I). Winner Call v3: always a testable call at the 50 boundary—uncertainty moves confidence, not whether a call is made.">48 dials to the forecast</h1>
     <div class="subtitle" title="Three parallel reads: (1) Popular Mandate from headline stress; (2) Converted outcome from stress + H×0.35; (3) Machinery risk from section I. Not a poll model—an analyst rubric you can audit.">
       <strong>Historical Legitimacy Stress Model</strong> — institutional, formal and lived economy, legitimacy, foreign policy, candidate fit, opposition threat, Electoral College geography, and machinery risk. Load a preset or set every dial yourself; exports include falsifiable lines.
@@ -1015,7 +1015,7 @@
       <div class="content baseline-prose">
         <p class="baseline-lead" title="Load the matching preset in Election Setup to sync every slider to this write-up. When news or polls change, adjust sliders and edit this section to keep the public narrative aligned with the model.">
           Below is the model applied to <strong>conditions as they exist on May 3, 2026</strong>.
-          Use preset <strong>“Current 2026 baseline”</strong> in Election Setup to load these sliders. Revise after midterms, inflation/oil news, Iran developments, and once Democrats have a nominee.
+          Use preset <strong>“2028-cycle baseline (May 2026)”</strong> in Election Setup to load these sliders. Revise after midterms, inflation/oil news, Iran developments, and once Democrats have a nominee.
         </p>
 
         <div class="baseline-callout" title="The model always scores stress against the White House party. Here the WH party is Republican and the sitting president is Trump, so high stress means danger to Republicans (and relative opportunity for the out-party) under the rubric—not a personal preference score.">
@@ -1035,7 +1035,7 @@
         </p>
 
         <h3 title="Each row is the sum of sliders in that section of Model Inputs. Hover a row for how it feeds (or does not feed) the headline stress number.">Scorecard (site sliders)</h3>
-        <p class="layer-detail" title="The Current 2026 baseline preset sets every factor to these totals. Institutional narrative sometimes shows a higher analytic read before caps (e.g. elite panic slider maxes at 1).">Totals match the <strong>Current 2026 baseline</strong> preset. Some narrative rows above used analytic scores before slider caps (e.g. elite panic max 1).</p>
+        <p class="layer-detail" title="The May 2026 / 2028-cycle baseline preset sets every factor to these totals. Institutional narrative sometimes shows a higher analytic read before caps (e.g. elite panic slider maxes at 1).">Totals match the <strong>2028-cycle baseline (May 2026)</strong> preset. Some narrative rows above used analytic scores before slider caps (e.g. elite panic max 1).</p>
         <div class="table-wrap">
           <table class="baseline-table">
             <thead>
@@ -1170,7 +1170,7 @@
         <div class="controls-top" style="margin-top: 12px;">
           <div>
             <label for="modelVersion" title="Version label for copied standardized prediction output.">Model Version</label>
-            <input type="text" id="modelVersion" value="v2.0-testable" />
+            <input type="text" id="modelVersion" value="v3-testable" />
           </div>
           <div>
             <label for="predictionTimestamp" title="Date this forecast snapshot is issued.">Prediction Timestamp</label>
@@ -1402,9 +1402,11 @@
       },
       {
         id: "current-2026-baseline",
-        title: "Current 2026 Baseline",
-        meta: "Early-cycle provisional baseline, not a final 2028 prediction (prospective forecast).",
+        title: "2028 cycle — baseline as of May 3, 2026 (R WH-party stress)",
+        meta: "Next presidential election: Nov 2028. As-of May 3, 2026: formal economy mixed; lived material stress high; Iran-war / inflation legitimacy stress rising. Not a midterm model.",
         raceName: "2028 Cycle (Current 2026 Baseline)",
+        snapshotDate: "2026-05-03",
+        modelVersionDefault: "v3-testable",
         incumbentParty: "Republican Party",
         incumbentCandidate: "Republican incumbent/successor",
         challengerCandidate: "Democratic challenger",
@@ -1456,7 +1458,7 @@
           violence: 3,
           conversionMismatch: 2
         },
-        notes: "Early-cycle provisional baseline only (prospective forecast). Formal economy is medium, lived/legitimacy are high, opposition offset remains low while nominee definition is incomplete."
+        notes: "Current-condition baseline only (May 3, 2026). Revise after 2026 midterms, inflation/oil path, Iran trajectory, Democratic nominee, and any open-seat succession question. Republicans vulnerable if these conditions persist: weak approval, poor cost-of-living approval, inflation re-acceleration, weak sentiment, housing/rent stress, household debt, youth disillusionment, Iran-war costs, civil-liberties / protest legitimacy stress."
       },
       {
         id: "2024",
@@ -2277,11 +2279,19 @@
       return s;
     }
 
-    function electionFarAwayPenalty() {
+    function electionYearFromRace() {
+      const presetId = document.getElementById("presetSelect").value;
       const race = (document.getElementById("raceName").value || "").trim();
-      const match = race.match(/(19|20)\d{2}/);
-      if (!match) return { flag: false, points: 0 };
-      const electionDate = new Date(Number(match[0]), 10, 5);
+      const years = [...race.matchAll(/\b(19|20)\d{2}\b/g)].map(m => Number(m[0]));
+      let y = years.length ? Math.max(...years) : 0;
+      if (presetId === BASELINE_PRESET_ID && y > 0 && y <= 2026) y = 2028;
+      return y;
+    }
+
+    function electionFarAwayPenalty() {
+      const y = electionYearFromRace();
+      if (!y) return { flag: false, points: 0 };
+      const electionDate = new Date(y, 10, 5);
       const now = new Date(document.getElementById("predictionTimestamp").value || new Date());
       const months = (electionDate.getFullYear() - now.getFullYear()) * 12 + (electionDate.getMonth() - now.getMonth());
       return { flag: months > 12, points: months > 12 ? 12 : 0 };
@@ -2298,9 +2308,9 @@
       const presetId = document.getElementById("presetSelect").value;
       if (["neutral", BASELINE_PRESET_ID].includes(presetId)) return { flag: false, points: 0 };
       const race = (document.getElementById("raceName").value || "").trim();
-      const match = race.match(/(19|20)\d{2}/);
-      if (!match) return { flag: false, points: 0 };
-      const year = Number(match[0]);
+      const years = [...race.matchAll(/\b(19|20)\d{2}\b/g)].map(m => Number(m[0]));
+      const year = years.length ? Math.max(...years) : 0;
+      if (!year) return { flag: false, points: 0 };
       const isProxyEra = year <= 1948;
       return { flag: isProxyEra, points: isProxyEra ? 8 : 0 };
     }
@@ -2416,6 +2426,16 @@
       document.getElementById("incumbentCandidate").value = preset.incumbentCandidate || "";
       document.getElementById("challengerCandidate").value = preset.challengerCandidate || "";
       document.getElementById("analystNotes").value = preset.notes || "";
+      if (preset.snapshotDate) {
+        document.getElementById("predictionTimestamp").value = preset.snapshotDate;
+      } else if (id === "neutral") {
+        document.getElementById("predictionTimestamp").value = new Date().toISOString().slice(0, 10);
+      } else if (/^\d{4}$/.test(id)) {
+        document.getElementById("predictionTimestamp").value = `${id}-10-25`;
+      }
+      if (preset.modelVersionDefault) {
+        document.getElementById("modelVersion").value = preset.modelVersionDefault;
+      }
       const presetValues = preset.sectionTargets
         ? deriveValuesFromSectionTargets(preset.sectionTargets)
         : (Object.keys(preset.values || {}).length ? preset.values : deriveRetrospectivePresetValues(preset.id));
@@ -2509,7 +2529,7 @@
       const text = [
         `Election Cycle: ${document.getElementById("raceName").value.trim() || "Custom"}`,
         `Scenario Type: ${scenarioType}`,
-        `Model Version: ${document.getElementById("modelVersion").value.trim() || "v2.0-testable"}`,
+        `Model Version: ${document.getElementById("modelVersion").value.trim() || "v3-testable"}`,
         `Prediction Timestamp: ${document.getElementById("predictionTimestamp").value || new Date().toISOString().slice(0, 10)}`,
         `Incumbent Party: ${document.getElementById("incumbentParty").value.trim() || "N/A"}`,
         `Incumbent-Party Candidate: ${document.getElementById("incumbentCandidate").value.trim() || "N/A"}`,
@@ -2597,14 +2617,14 @@
       Object.keys(factorValues).forEach(k => delete factorValues[k]);
       initializeValues();
       migratePresetsToNormalizedScale();
-      if (!document.getElementById("predictionTimestamp").value) {
-        document.getElementById("predictionTimestamp").value = new Date().toISOString().slice(0, 10);
-      }
       renderPresetSelect();
       renderScenarioList();
       renderFactors();
       attachListeners();
       restoreStateOrDefault();
+      if (!document.getElementById("predictionTimestamp").value) {
+        document.getElementById("predictionTimestamp").value = new Date().toISOString().slice(0, 10);
+      }
       updateAll();
       syncBaselineVisibility();
       document.getElementById("resultBanner").setAttribute("aria-busy", "false");
