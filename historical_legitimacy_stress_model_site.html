@@ -1111,7 +1111,7 @@
       <div class="card-header">
         <div>
           <div class="card-title" title="Pick who holds the White House and load a preset so sliders match a scenario. Names are for readable outputs; all scoring is against the WH party.">Election Setup</div>
-          <div class="card-note" title="Presets bundle every factor at once. Reset neutral clears saved browser session and loads the blank scenario.">Load a historical preset or create a future race from scratch.</div>
+          <div class="card-note" title="Presets bundle every factor at once. Reset blank clears saved browser session and loads the blank scenario.">Load a historical preset or create a future race from scratch.</div>
         </div>
         <button class="secondary" id="themeToggle" type="button" title="Toggle light/dark theme for readability.">Light</button>
       </div>
@@ -1477,7 +1477,7 @@
       },
       {
         id: "2012",
-        title: "2012: Democrats win",
+        title: "2012: Democrats hold",
         meta: "Slow recovery but Obama coalition legitimacy survives.",
         raceName: "2012 Presidential Election",
         incumbentParty: "Democratic Party",
@@ -1519,7 +1519,7 @@
       },
       {
         id: "2004",
-        title: "2004: Republicans survive",
+        title: "2004: Republicans narrowly hold",
         meta: "Iraq damage, but security frame and challenger weakness offset stress.",
         raceName: "2004 Presidential Election",
         incumbentParty: "Republican Party",
@@ -1540,7 +1540,7 @@
       },
       {
         id: "2000",
-        title: "2000: Gore mandate, Bush converted outcome",
+        title: "2000: Gore popular mandate / Bush converted outcome",
         meta: "Low incumbent stress but catastrophic conversion risk in Florida.",
         raceName: "2000 Presidential Election",
         incumbentParty: "Democratic Party",
@@ -1631,6 +1631,7 @@
         incumbentCandidate: "Bill Clinton",
         challengerCandidate: "Bob Dole",
         values: {},
+        sectionTargets: { institutional: 3, formalEconomy: 2, livedMaterial: 2, legitimacy: 2, foreignMilitary: 1, candidateAffect: 1, oppositionOffset: 12, electoralConversion: 2, democraticRisk: 1 },
         notes: "Retrospective fit: low formal/lived stress and weak challenger conversion pressure."
       },
       {
@@ -1642,6 +1643,7 @@
         incumbentCandidate: "George H. W. Bush",
         challengerCandidate: "Michael Dukakis",
         values: {},
+        sectionTargets: { institutional: 7, formalEconomy: 5, livedMaterial: 4, legitimacy: 2, foreignMilitary: 1, candidateAffect: 3, oppositionOffset: 8, electoralConversion: 2, democraticRisk: 1 },
         notes: "Retrospective fit: open-seat stress tempered by continuity from popular incumbent cycle."
       },
       {
@@ -1653,6 +1655,7 @@
         incumbentCandidate: "Ronald Reagan",
         challengerCandidate: "Walter Mondale",
         values: {},
+        sectionTargets: { institutional: 1, formalEconomy: 1, livedMaterial: 1, legitimacy: 1, foreignMilitary: 1, candidateAffect: 0, oppositionOffset: 15, electoralConversion: 0, democraticRisk: 0 },
         notes: "Retrospective fit: low stress across institutional, economic, and candidate-affect layers."
       },
       {
@@ -1664,6 +1667,7 @@
         incumbentCandidate: "Gerald Ford",
         challengerCandidate: "Jimmy Carter",
         values: {},
+        sectionTargets: { institutional: 14, formalEconomy: 10, livedMaterial: 10, legitimacy: 16, foreignMilitary: 5, candidateAffect: 6, oppositionOffset: 6, electoralConversion: 4, democraticRisk: 3 },
         notes: "Retrospective fit: high legitimacy stress despite partial economic stabilization."
       },
       {
@@ -1675,6 +1679,7 @@
         incumbentCandidate: "Richard Nixon",
         challengerCandidate: "George McGovern",
         values: {},
+        sectionTargets: { institutional: 7, formalEconomy: 2, livedMaterial: 4, legitimacy: 10, foreignMilitary: 6, candidateAffect: 2, oppositionOffset: 20, electoralConversion: 1, democraticRisk: 1 },
         notes: "Retrospective fit: offset layer dominates despite legitimacy strain."
       },
       {
@@ -1686,6 +1691,7 @@
         incumbentCandidate: "Lyndon Johnson",
         challengerCandidate: "Barry Goldwater",
         values: {},
+        sectionTargets: { institutional: 2, formalEconomy: 1, livedMaterial: 1, legitimacy: 3, foreignMilitary: 1, candidateAffect: 1, oppositionOffset: 22, electoralConversion: 0, democraticRisk: 0 },
         notes: "Retrospective fit: opposition threat sharply reduced incumbent stress."
       },
       {
@@ -1697,6 +1703,7 @@
         incumbentCandidate: "Richard Nixon",
         challengerCandidate: "John F. Kennedy",
         values: {},
+        sectionTargets: { institutional: 10, formalEconomy: 10, livedMaterial: 8, legitimacy: 5, foreignMilitary: 2, candidateAffect: 5, oppositionOffset: 5, electoralConversion: 10, democraticRisk: 5 },
         notes: "Retrospective fit: competitive stress plus candidate-affect edge for challenger."
       },
       {
@@ -1708,6 +1715,7 @@
         incumbentCandidate: "Dwight Eisenhower",
         challengerCandidate: "Adlai Stevenson",
         values: {},
+        sectionTargets: { institutional: 1, formalEconomy: 1, livedMaterial: 1, legitimacy: 1, foreignMilitary: 1, candidateAffect: 0, oppositionOffset: 12, electoralConversion: 0, democraticRisk: 0 },
         notes: "Retrospective fit: low stress and high incumbency credibility."
       },
       {
@@ -1719,6 +1727,7 @@
         incumbentCandidate: "Adlai Stevenson",
         challengerCandidate: "Dwight Eisenhower",
         values: {},
+        sectionTargets: { institutional: 14, formalEconomy: 8, livedMaterial: 9, legitimacy: 12, foreignMilitary: 10, candidateAffect: 6, oppositionOffset: 3, electoralConversion: 6, democraticRisk: 1 },
         notes: "Retrospective fit: foreign-policy and institutional fatigue plus open-seat vulnerability."
       },
       {
@@ -1730,6 +1739,7 @@
         incumbentCandidate: "Harry Truman",
         challengerCandidate: "Thomas Dewey",
         values: {},
+        sectionTargets: { institutional: 14, formalEconomy: 10, livedMaterial: 10, legitimacy: 10, foreignMilitary: 4, candidateAffect: 4, oppositionOffset: 8, electoralConversion: 8, democraticRisk: 2 },
         notes: "Retrospective fit: instability did not convert into challenger victory."
       }
     ];
@@ -1839,7 +1849,8 @@
       presets.forEach(preset => {
         const option = document.createElement("option");
         option.value = preset.id;
-        option.textContent = preset.title;
+        const isHistorical = !["neutral", BASELINE_PRESET_ID].includes(preset.id);
+        option.textContent = isHistorical ? `${preset.title} (retrospective fit)` : preset.title;
         select.appendChild(option);
       });
     }
@@ -1851,7 +1862,11 @@
         const button = document.createElement("button");
         button.type = "button";
         button.className = "scenario-button";
-        button.innerHTML = `<div class="scenario-title">${escapeHtml(preset.title)}</div><div class="scenario-meta">${escapeHtml(preset.meta)} · retrospective fit references are descriptive, not proof.</div>`;
+        const isHistorical = !["neutral", BASELINE_PRESET_ID].includes(preset.id);
+        const frame = isHistorical
+          ? "Retrospective fit only (descriptive, not proof)."
+          : "Prospective forecast scenario.";
+        button.innerHTML = `<div class="scenario-title">${escapeHtml(preset.title)}${isHistorical ? " <span style=\"opacity:.7;\">(retrospective fit)</span>" : ""}</div><div class="scenario-meta">${escapeHtml(preset.meta)} · ${frame}</div>`;
         button.addEventListener("click", () => loadPresetById(preset.id));
         list.appendChild(button);
       });
@@ -1960,6 +1975,77 @@
         Object.assign(values, distributeTargetAcrossFactors(section.factors.map(f => f.id), targetRaw));
       });
       return values;
+    }
+
+    function deriveSectionTargetsFromHistoricalPreset(presetId) {
+      if (!modelContext || !modelContext.historicalPresets || !modelContext.historicalPresets[presetId]) return null;
+      const indicative = modelContext.historicalPresets[presetId].indicativeScores || {};
+      return {
+        institutional: Number(indicative.institutionalStress) || 0,
+        formalEconomy: Number(indicative.formalEconomicStress) || 0,
+        livedMaterial: Number(indicative.livedMaterialStress) || 0,
+        legitimacy: Number(indicative.legitimacyMoralInjuryStress) || 0,
+        foreignMilitary: Number(indicative.foreignMilitaryStress) || 0,
+        candidateAffect: Number(indicative.candidateAffectCoalitionFit) || 0,
+        oppositionOffset: Number(indicative.oppositionThreatOffset) || 0,
+        electoralConversion: Number(indicative.electoralCollegeConversion) || 0,
+        democraticRisk: Number(indicative.democraticConversionRisk) || 0
+      };
+    }
+
+    function deriveValuesFromSectionTargets(sectionTargets) {
+      if (!sectionTargets || typeof sectionTargets !== "object") return {};
+      const values = {};
+      sections.forEach(section => {
+        if (!Object.prototype.hasOwnProperty.call(sectionTargets, section.id)) return;
+        const targetWeighted = Number(sectionTargets[section.id]) || 0;
+        const targetRaw = (targetWeighted / Math.max(1, section.weight)) * section.rawMax;
+        Object.assign(values, distributeTargetAcrossFactors(section.factors.map(f => f.id), targetRaw));
+      });
+      return values;
+    }
+
+    function deriveSectionTargetsFromValues(values) {
+      if (!values || typeof values !== "object") return null;
+      const targets = {};
+      sections.forEach(section => {
+        const raw = section.factors.reduce((sum, factor) => sum + (Number(values[factor.id]) || 0), 0);
+        const weighted = section.rawMax ? (raw / section.rawMax) * section.weight : 0;
+        targets[section.id] = Math.round(weighted * 10) / 10;
+      });
+      return targets;
+    }
+
+    function migratePresetsToNormalizedScale() {
+      presets.forEach(preset => {
+        const isHistorical = !["neutral", BASELINE_PRESET_ID].includes(preset.id);
+        if (isHistorical && !preset.sectionTargets) {
+          preset.sectionTargets = deriveSectionTargetsFromHistoricalPreset(preset.id) || undefined;
+        }
+        if (!preset.sectionTargets && preset.values && Object.keys(preset.values).length) {
+          // Backfill section targets for deterministic auditing across all presets.
+          preset.sectionTargets = deriveSectionTargetsFromValues(preset.values);
+        }
+        if (isHistorical && preset.sectionTargets) {
+          // Keep audited retrospective section targets as the single source of truth.
+          preset.values = deriveValuesFromSectionTargets(preset.sectionTargets);
+        } else if (isHistorical && (!preset.values || !Object.keys(preset.values).length)) {
+          preset.values = deriveRetrospectivePresetValues(preset.id);
+        }
+        const incoming = preset.values || {};
+        const keys = Object.keys(incoming);
+        if (!keys.length) return;
+        const alreadyNormalized = keys.every(k => Number(incoming[k]) <= 5);
+        const next = {};
+        keys.forEach(k => {
+          next[k] = normalizeIncomingFactorValue(k, incoming[k], alreadyNormalized);
+        });
+        preset.values = next;
+        preset.normalizedV2 = true;
+        if (isHistorical && typeof preset.notes === "string" && !/retrospective fit/i.test(preset.notes)) {
+          preset.notes = `Retrospective fit: ${preset.notes}`;
+        }
+      });
     }
 
     function classifyStress(stress) {
@@ -2095,9 +2181,12 @@
       document.getElementById("incumbentCandidate").value = preset.incumbentCandidate || "";
       document.getElementById("challengerCandidate").value = preset.challengerCandidate || "";
       document.getElementById("analystNotes").value = preset.notes || "";
-      const presetValues = Object.keys(preset.values || {}).length ? preset.values : deriveRetrospectivePresetValues(preset.id);
+      const presetValues = preset.sectionTargets
+        ? deriveValuesFromSectionTargets(preset.sectionTargets)
+        : (Object.keys(preset.values || {}).length ? preset.values : deriveRetrospectivePresetValues(preset.id));
+      const presetIsNormalized = preset.normalizedV2 === true || Object.values(presetValues).every(v => Number(v) <= 5);
       Object.keys(factorValues).forEach(key => {
-        factorValues[key] = normalizeIncomingFactorValue(key, presetValues[key] !== undefined ? presetValues[key] : 0, false);
+        factorValues[key] = normalizeIncomingFactorValue(key, presetValues[key] !== undefined ? presetValues[key] : 0, presetIsNormalized);
       });
       falsifiabilityTouched = false;
       scheduleSave();
@@ -2172,12 +2261,15 @@
       const converted = convertedOutcomeLabel(scores.convertedScore);
       const confidenceLevel = confidence.score >= 75 ? "High" : confidence.score >= 55 ? "Medium" : "Low";
       const drivers = topDrivers(scores);
+      const presetId = document.getElementById("presetSelect").value;
+      const scenarioType = ["neutral", BASELINE_PRESET_ID].includes(presetId) ? "Prospective forecast" : "Retrospective fit";
       const sectionLines = sections.map(section => {
         const weighted = scores.sectionWeighted[section.id];
         return `- ${section.title}: ${weighted.toFixed(1)} / ${section.weight}${section.isOffset ? " subtractive" : section.id === "electoralConversion" || section.id === "democraticRisk" ? " separate" : ""}`;
       }).join("\n");
       const text = [
         `Election Cycle: ${document.getElementById("raceName").value.trim() || "Custom"}`,
+        `Scenario Type: ${scenarioType}`,
         `Model Version: ${document.getElementById("modelVersion").value.trim() || "v2.0-testable"}`,
         `Prediction Timestamp: ${document.getElementById("predictionTimestamp").value || new Date().toISOString().slice(0, 10)}`,
         `Incumbent Party: ${document.getElementById("incumbentParty").value.trim() || "N/A"}`,
@@ -2258,6 +2350,7 @@
       sections.push(...buildSectionsFromContext(model));
       Object.keys(factorValues).forEach(k => delete factorValues[k]);
       initializeValues();
+      migratePresetsToNormalizedScale();
       if (!document.getElementById("predictionTimestamp").value) {
         document.getElementById("predictionTimestamp").value = new Date().toISOString().slice(0, 10);
       }
