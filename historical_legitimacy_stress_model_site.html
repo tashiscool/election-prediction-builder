@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Historical Legitimacy Stress Model · 2026 edition</title>
-  <meta name="description" content="Transparent rubric for White House party stress, Electoral College conversion, and democratic machinery risk. Historical presets and May 2026 current-condition baseline." />
+  <title>48 dials to the forecast · Historical Legitimacy Stress Model</title>
+  <meta name="description" content="48 dials to the forecast — a transparent rubric (48 subfactors) for White House party stress, Electoral College conversion, and democratic machinery risk. Historical presets and May 2026 baseline." />
   <meta name="theme-color" content="#0f172a" />
-  <meta property="og:title" content="Historical Legitimacy Stress Model · 2026 edition" />
-  <meta property="og:description" content="Score incumbent-party vulnerability with lived material stress, legitimacy layers, geography, and machinery risk—separate from headline polls." />
+  <meta property="og:title" content="48 dials to the forecast · Historical Legitimacy Stress Model" />
+  <meta property="og:description" content="48 dials to the forecast — score incumbent-party stress, Electoral College geography, and machinery risk with a testable winner-call framework." />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Historical Legitimacy Stress Model · 2026 edition" />
-  <meta name="twitter:description" content="Transparent rubric for White House party stress, Electoral College conversion, and democratic machinery risk." />
+  <meta name="twitter:title" content="48 dials to the forecast · Historical Legitimacy Stress Model" />
+  <meta name="twitter:description" content="48 dials to the forecast — transparent rubric for stress, Electoral College conversion, and democratic machinery risk." />
   <style>
     :root {
       --bg: #0f172a;
@@ -53,11 +53,27 @@
       margin: 0 auto;
     }
 
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--cyan);
+      margin: 0 0 12px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.1);
+      border: 1px solid rgba(34, 211, 238, 0.28);
+    }
+
     h1 {
       margin: 0 0 10px;
-      font-size: clamp(2rem, 4vw, 4.3rem);
+      font-size: clamp(1.85rem, 3.6vw, 3.4rem);
       letter-spacing: -0.055em;
-      line-height: 0.95;
+      line-height: 1.02;
     }
 
     .subtitle {
@@ -389,14 +405,20 @@
 
     .score-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 12px;
       margin-bottom: 16px;
     }
 
-    @media (max-width: 820px) {
+    @media (max-width: 1100px) {
       .score-grid {
         grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .score-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -975,9 +997,10 @@
 </head>
 <body>
   <header>
-    <h1 title="Incumbent-party stress index with separate Electoral College and democratic-machinery dimensions. Not a single poll forecast—an analyst rubric.">Historical Legitimacy Stress Model</h1>
-    <div class="subtitle" title="Three outputs: (1) incumbent stress from voter-facing pressures; (2) Electoral College geography stress scored separately; (3) democratic machinery risk so forecasts do not assume clean translation from polls to power. Hover sections below for how each part works.">
-      A future-election forecasting tool that combines institutional stability, formal economic data, lived material stress, legitimacy/moral injury, foreign-policy stress, candidate affect, opposition threat, Electoral College conversion, and democratic conversion risk.
+    <div class="hero-kicker" title="48 graded subfactors (dials) across sections A–I; same rubric as the Election Insights React build.">2026 edition · Historical Legitimacy Stress Model · 48 dials</div>
+    <h1 title="Forty-eight sliders (0–5 each), section-weighted into headline stress, Electoral College conversion (H), and democratic machinery risk (I). Winner Call v3: always a testable call at the 50 boundary—uncertainty moves confidence, not whether a call is made.">48 dials to the forecast</h1>
+    <div class="subtitle" title="Three parallel reads: (1) Popular Mandate from headline stress; (2) Converted outcome from stress + H×0.35; (3) Machinery risk from section I. Not a poll model—an analyst rubric you can audit.">
+      <strong>Historical Legitimacy Stress Model</strong> — institutional, formal and lived economy, legitimacy, foreign policy, candidate fit, opposition threat, Electoral College geography, and machinery risk. Load a preset or set every dial yourself; exports include falsifiable lines.
     </div>
   </header>
 
@@ -1005,7 +1028,7 @@
           <div class="tip-row" title="Snapshot date for sources and narrative in this baseline box. Change the date when you refresh the analysis."><span>As-of date</span><span>2026-05-03</span></div>
           <div class="tip-row" title="Incumbent stress = sum of model layers A–F minus opposition offset G, clamped 0–100. This site uses capped sliders from the embedded rubric, so totals can differ slightly from a free-form spreadsheet. ~53 here maps to Challenger Win (50–64.9) on the popular-mandate call."><span>Incumbent stress (this site, capped sliders)</span><span><strong>53</strong> / 100 → Challenger Win band</span></div>
           <div class="tip-row" title="If you hypothetically scored factors above slider caps in a spreadsheet (e.g. elite panic), raw totals can sit a few points higher. The site enforces caps so every analyst uses the same discrete rubric."><span>Narrative “paper” stress (uncapped reads)</span><span>~56–58 (see layer notes)</span></div>
-          <div class="tip-row" title="Heuristic confidence from distance to stress thresholds and from democratic-conversion risk (machinery uncertainty). Far from cut points and high machinery risk both reduce stated confidence. Early in the cycle, time-to-election also lowers confidence."><span>Confidence</span><span>Medium-low — election far away; 2026 midterms not yet held</span></div>
+          <div class="tip-row" title="Winner Call v3 confidence: High / Medium / Low from distance to 50 on mandate and converted scores, H/I elevation, unknown nominees, election timing, proxy-era data, and machinery tier—not a statistical interval."><span>Confidence (v3)</span><span>Low — election far away; 2026 midterms not yet held; machinery layer elevated in preset</span></div>
         </div>
         <p class="layer-detail" title="Drivers are additive in logic: formal GDP can look okay while lived-material and legitimacy layers still push incumbent-party vulnerability—this model separates those channels on purpose.">
           Main driver: formal economy is not collapsing, but lived material stress, inflation memory, housing stress, Iran-war cost concerns, weak approval, youth disillusionment, and legitimacy / democratic-risk layers are already accumulating.
@@ -1193,22 +1216,27 @@
         </div>
 
         <div class="score-grid">
-          <div class="metric" title="Sum of sections A–F minus G, capped 0–100. Measures accumulated danger to the White House party from institutional, economic, lived, legitimacy, foreign, and candidate-affect factors, net of opposition-threat relief.">
-            <div class="metric-label">Incumbent Stress</div>
+          <div class="metric" title="Sum of sections A–F minus G, capped 0–100. Popular Mandate Call uses the 50 boundary on this headline score.">
+            <div class="metric-label">Incumbent stress</div>
             <div class="metric-value" id="stressScore">0</div>
-            <div class="metric-small">Calls use 50 boundary: 0–34.9 hold; 35–49.9 hold low confidence; 50–64.9 challenger win; 65+ challenger collapse-risk margin.</div>
+            <div class="metric-small">0–34.9 hold; 35–49.9 hold low confidence; 50–64.9 challenger win; 65+ collapse-risk margin.</div>
           </div>
-          <div class="metric" title="Section H total only: wasted votes, swing-state efficiency, third-party geography, realignment, PV–EC split risk. Higher scores mean geography could bend the outcome away from a simple national poll lead. Not added into the headline stress number.">
-            <div class="metric-label">Electoral Conversion</div>
+          <div class="metric" title="Headline stress + (Electoral H weighted × 0.35), clamped 0–100. Converted Outcome Call uses the same 50 boundary.">
+            <div class="metric-label">Conversion-adjusted</div>
+            <div class="metric-value" id="convertedScoreMetric">0</div>
+            <div class="metric-small">= headline + H×0.35; not a second poll—geography nudge for the EC-mapped read.</div>
+          </div>
+          <div class="metric" title="Section H only: wasted votes, swing-state efficiency, third-party geography, realignment, PV–EC split risk. Not merged into headline stress.">
+            <div class="metric-label">EC conversion (H)</div>
             <div class="metric-value" id="electoralScore">0</div>
-            <div class="metric-small">Weighted 0–30 conversion pressure (used as +0.35 multiplier in converted outcome).</div>
+            <div class="metric-small">Weighted 0–30; feeds the converted score.</div>
           </div>
-          <div class="metric" title="Section I total: litigation, margins, ballot access, partisan administration, courts, certification pathways, violence, structural mismatch. Flags scenarios where certified power might diverge from voter intent; also pulls down confidence when elevated.">
-            <div class="metric-label">Democratic Risk</div>
+          <div class="metric" title="Section I: litigation, margins, ballot access, partisan administration, courts, certification, violence, structural mismatch. Warns separately; high/severe pulls confidence Low.">
+            <div class="metric-label">Machinery risk (I)</div>
             <div class="metric-value" id="conversionRiskScore">0</div>
-            <div class="metric-small">Risk that courts, suppression, count fights, certification sabotage, or violence distort voter intent.</div>
+            <div class="metric-small">Does not erase mandate/converted calls; severe adds a crisis line in the final narrative.</div>
           </div>
-          <div class="metric" title="High / Medium / Low from distance to the 50 decision boundary (headline and converted), plus H/I elevation, timing, nominees, proxy era, and machinery risk. Not a statistical interval.">
+          <div class="metric" title="High / Medium / Low from distance to 50 (mandate and converted), H/I elevation, timing, nominees, proxy era, and machinery tier.">
             <div class="metric-label">Confidence</div>
             <div class="metric-value" id="confidenceScore">—</div>
             <div class="metric-small" id="confidenceScoreDetail">Winner calls are always made; confidence reflects how fragile the call is.</div>
@@ -1252,12 +1280,12 @@
       <div class="card-header">
         <div>
           <div class="card-title" title="Every slider pulls guidance text from the embedded model JSON. Score each factor against the White House party unless you are in Opposition Threat Offset (G), which subtracts stress.">Model Inputs</div>
-          <div class="card-note" title="Factor names show the full rubric on hover; sliders show the rubric line for the current value. Expand sections to reduce scrolling.">Sections A–F add stress to the White House party; G subtracts (opposition threat). H and I are reported separately for geography and machinery risk—same logic as the Election Compass / Lovable build.</div>
+          <div class="card-note" title="Factor names show the full rubric on hover; sliders show the rubric line for the current value. Expand sections to reduce scrolling.">Sections A–F add stress to the White House party; G subtracts (opposition threat). H and I are reported separately for geography and machinery risk—same 48-dial rubric as the Election Insights React build.</div>
         </div>
       </div>
       <div class="content">
         <div class="footer-note" style="margin-bottom:12px;">
-          <strong>General 0–5 meaning:</strong> 0 absent/irrelevant, 1 weak, 2 noticeable secondary, 3 clearly meaningful, 4 dominant/severe, 5 historically defining.
+          <strong>48 dials:</strong> one 0–5 slider per subfactor across A–I (see section headers for counts). <strong>General 0–5 meaning:</strong> 0 absent/irrelevant, 1 weak, 2 noticeable secondary, 3 clearly meaningful, 4 dominant/severe, 5 historically defining.
         </div>
         <div id="factorContainer"></div>
       </div>
@@ -2342,6 +2370,8 @@
       });
 
       document.getElementById("stressScore").textContent = scores.stress.toFixed(1);
+      const csm = document.getElementById("convertedScoreMetric");
+      if (csm) csm.textContent = scores.convertedScore.toFixed(1);
       document.getElementById("electoralScore").textContent = scores.electoral.toFixed(1);
       document.getElementById("conversionRiskScore").textContent = scores.democraticRisk.toFixed(1);
       document.getElementById("confidenceScore").textContent = confidence.level;
