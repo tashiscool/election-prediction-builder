@@ -2,6 +2,7 @@
   "name": "election-prediction-builder",
   "private": true,
   "scripts": {
-    "start": "python3 -m http.server 3456"
+    "start": "python3 -m http.server 3456",
+    "validate": "node scripts/validate-model.js"
   }
 }

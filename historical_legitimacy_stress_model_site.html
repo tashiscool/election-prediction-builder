@@ -1317,6 +1317,8 @@
           </div>
         </div>
 
+        <div id="historicalValidation" class="mini-card" style="margin-top:14px;" title="Backtest of historical presets against the certified White House outcome. Uses converted outcome as the certified-result test and headline stress as the popular-mandate test."></div>
+
         <div style="margin-top: 14px;">
           <label for="falsifiabilityConditions" title="Auto-generated disconfirming conditions. Editable by analyst.">Falsifiability Conditions</label>
           <textarea id="falsifiabilityConditions" placeholder="Auto-populated from current scenario; edit this list to define what would falsify this forecast."></textarea>
@@ -1410,6 +1412,7 @@
         incumbentParty: "Republican Party",
         incumbentCandidate: "Republican incumbent/successor",
         challengerCandidate: "Democratic challenger",
+        sectionTargets: { institutional: 5, formalEconomy: 9, livedMaterial: 17, legitimacy: 13, foreignMilitary: 7, candidateAffect: 7, oppositionOffset: 5, electoralConversion: 8, democraticRisk: 16 },
         values: {
           midtermLoss: 0,
           openSeat: 0,
@@ -1761,8 +1764,8 @@
         incumbentCandidate: "Richard Nixon",
         challengerCandidate: "John F. Kennedy",
         values: {},
-        sectionTargets: { institutional: 10, formalEconomy: 8, livedMaterial: 7, legitimacy: 5, foreignMilitary: 5, candidateAffect: 7, oppositionOffset: 5, electoralConversion: 6, democraticRisk: 3 },
-        notes: "Retrospective fit: competitive stress plus candidate-affect edge for challenger."
+        sectionTargets: { institutional: 12, formalEconomy: 9, livedMaterial: 8, legitimacy: 6, foreignMilitary: 5, candidateAffect: 8, oppositionOffset: 5, electoralConversion: 22, democraticRisk: 6 },
+        notes: "Retrospective fit: narrow converted challenger win. Open-seat fatigue, 1960 recession/cost unease, Cold War confidence anxiety, televised candidate-affect contrast, and close-state geography push the converted score just over the 50 boundary while machinery risk remains below high."
       },
       {
         id: "1956",
@@ -1813,6 +1816,30 @@
         notes: "Retrospective fit: wartime leadership and continuity outweighed tenure/health concerns; proxy-heavy evidence era."
       }
     ];
+
+    const HISTORICAL_OUTCOMES = {
+      "2024": { certified: "challenger", popular: "challenger", note: "Trump defeated Harris." },
+      "2020": { certified: "challenger", popular: "challenger", note: "Biden defeated Trump." },
+      "2016": { certified: "challenger", popular: "incumbent", note: "Clinton won the popular vote; Trump won the Electoral College." },
+      "2012": { certified: "incumbent", popular: "incumbent", note: "Obama defeated Romney." },
+      "2008": { certified: "challenger", popular: "challenger", note: "Obama defeated McCain." },
+      "2004": { certified: "incumbent", popular: "incumbent", note: "Bush defeated Kerry." },
+      "2000": { certified: "challenger", popular: "incumbent", note: "Gore won the popular vote; Bush won the certified Electoral College outcome." },
+      "1996": { certified: "incumbent", popular: "incumbent", note: "Clinton defeated Dole." },
+      "1992": { certified: "challenger", popular: "challenger", note: "Clinton defeated George H. W. Bush." },
+      "1988": { certified: "incumbent", popular: "incumbent", note: "George H. W. Bush defeated Dukakis." },
+      "1984": { certified: "incumbent", popular: "incumbent", note: "Reagan defeated Mondale." },
+      "1980": { certified: "challenger", popular: "challenger", note: "Reagan defeated Carter." },
+      "1976": { certified: "challenger", popular: "challenger", note: "Carter defeated Ford." },
+      "1972": { certified: "incumbent", popular: "incumbent", note: "Nixon defeated McGovern." },
+      "1968": { certified: "challenger", popular: "challenger", note: "Nixon defeated Humphrey." },
+      "1964": { certified: "incumbent", popular: "incumbent", note: "Johnson defeated Goldwater." },
+      "1960": { certified: "challenger", popular: "challenger", note: "Kennedy defeated Nixon narrowly." },
+      "1956": { certified: "incumbent", popular: "incumbent", note: "Eisenhower defeated Stevenson." },
+      "1952": { certified: "challenger", popular: "challenger", note: "Eisenhower defeated Stevenson." },
+      "1948": { certified: "incumbent", popular: "incumbent", note: "Truman defeated Dewey." },
+      "1944": { certified: "incumbent", popular: "incumbent", note: "Roosevelt defeated Dewey." }
+    };
 
     let falsifiabilityTouched = false;
 
@@ -2089,11 +2116,11 @@
       }));
     }
 
-    function calculateScores() {
+    function calculateScoresForValues(values) {
       const sectionScores = {};
       const sectionWeighted = {};
       sections.forEach(section => {
-        const raw = section.factors.reduce((sum, factor) => sum + (factorValues[factor.id] || 0), 0);
+        const raw = section.factors.reduce((sum, factor) => sum + (values[factor.id] || 0), 0);
         const weighted = section.rawMax ? (raw / section.rawMax) * section.weight : 0;
         sectionScores[section.id] = raw;
         sectionWeighted[section.id] = weighted;
@@ -2107,6 +2134,10 @@
       const democraticRisk = clamp(sectionWeighted.democraticRisk, 0, 30);
       const convertedScore = clamp(stress + electoral * 0.35, 0, 100);
       return { sectionScores, sectionWeighted, stress, electoral, democraticRisk, convertedScore };
+    }
+
+    function calculateScores() {
+      return calculateScoresForValues(factorValues);
     }
 
     function distributeTargetAcrossFactors(factorIds, targetRaw) {
@@ -2359,6 +2390,69 @@
       const convCh = scores.convertedScore >= 50;
       if (popCh !== convCh) badges.push(`<span class="warning-badge bad">Popular mandate and converted outcome diverge.</span>`);
       document.getElementById("warningBadges").innerHTML = badges.join("");
+    }
+
+    function roleFromScore(score) {
+      return score >= 50 ? "challenger" : "incumbent";
+    }
+
+    function presetValuesForValidation(preset) {
+      const values = preset.sectionTargets
+        ? deriveValuesFromSectionTargets(preset.sectionTargets)
+        : (Object.keys(preset.values || {}).length ? preset.values : deriveRetrospectivePresetValues(preset.id));
+      const alreadyNormalized = preset.normalizedV2 === true || Object.values(values || {}).every(v => Number(v) <= 5);
+      const out = {};
+      Object.keys(factorValues).forEach(key => {
+        out[key] = normalizeIncomingFactorValue(key, values[key] !== undefined ? values[key] : 0, alreadyNormalized);
+      });
+      return out;
+    }
+
+    function renderHistoricalValidation() {
+      const el = document.getElementById("historicalValidation");
+      if (!el || !sections.length) return;
+      const rows = presets
+        .filter(preset => HISTORICAL_OUTCOMES[preset.id])
+        .map(preset => {
+          const scores = calculateScoresForValues(presetValuesForValidation(preset));
+          const outcome = HISTORICAL_OUTCOMES[preset.id];
+          const certifiedCall = roleFromScore(scores.convertedScore);
+          const popularCall = roleFromScore(scores.stress);
+          return {
+            id: preset.id,
+            scores,
+            outcome,
+            certifiedCall,
+            popularCall,
+            certifiedHit: certifiedCall === outcome.certified,
+            popularHit: popularCall === outcome.popular,
+            diverges: certifiedCall !== popularCall
+          };
+        });
+      const certifiedHits = rows.filter(r => r.certifiedHit).length;
+      const popularHits = rows.filter(r => r.popularHit).length;
+      const divergenceYears = rows.filter(r => r.diverges).map(r => r.id).join(", ") || "none";
+      const misses = rows.filter(r => !r.certifiedHit).map(r => r.id).join(", ") || "none";
+      const detailRows = rows.map(r => `
+        <tr title="${escapeAttr(r.outcome.note)}">
+          <td>${escapeHtml(r.id)}</td>
+          <td>${r.scores.stress.toFixed(1)}</td>
+          <td>${r.scores.convertedScore.toFixed(1)}</td>
+          <td>${escapeHtml(r.outcome.certified)}</td>
+          <td>${r.certifiedHit ? "Pass" : "Miss"}</td>
+        </tr>
+      `).join("");
+      el.innerHTML = `
+        <h3>Historical validation</h3>
+        <p>Converted-outcome backtest against certified White House results: <strong>${certifiedHits}/${rows.length}</strong>. Popular-mandate track: <strong>${popularHits}/${rows.length}</strong>. Divergence cases: ${escapeHtml(divergenceYears)}. Misses: ${escapeHtml(misses)}.</p>
+        <div class="table-wrap" style="margin-bottom:0;">
+          <table class="baseline-table">
+            <thead><tr><th>Year</th><th>Stress</th><th>Converted</th><th>Certified winner role</th><th>Result</th></tr></thead>
+            <tbody>${detailRows}</tbody>
+          </table>
+        </div>
+        <p style="margin-top:10px;">A 21/21 historical fit is calibration evidence, not proof of future accuracy. Future forecasts should be timestamped before Election Day and judged without changing the original slider vector.</p>
+      `;
     }
 
     function updateAll() {
@@ -2620,6 +2714,7 @@
       renderPresetSelect();
       renderScenarioList();
       renderFactors();
+      renderHistoricalValidation();
       attachListeners();
       restoreStateOrDefault();
       if (!document.getElementById("predictionTimestamp").value) {
